@@ -1,0 +1,36 @@
+Project 1 -- Blackjack MVP
+
+  Setup
+    • Setup background - Green Playing table
+    • Show deck of cards on playing table
+    • Set array of 52 card objects (suite, value)
+    • Setup Player and Computer/Dealer objects
+    • Random deal (pop or count = 52) form card array updating html  to display dealt cards
+  Player/Dealer(Computer)
+    • bankroll -= $10.00 ante on start (ante or end button)
+    • update pot += ante or bet
+    • 2 cards dealt to each player
+    • calculate score for dealer/player
+      Player Hit (on hit bet add score)
+          •Bet if bankroll >= 0 else EOG (bet/stay button)
+          •player bet amount (bankroll -= bet)
+          •player takes another card
+          •Player calc total > 21 busted EORound
+          •Dealer/Computer may take card or stay
+            •The dealer must hit until the cards total 17 or more points
+          •Dealer/Computer add total > 21 busted EORound
+            •Player wins pot bankroll += (pot * 2)
+          •Dealer/Computer pays winner
+          While dealer or player !busted or !stay
+      Stay
+          •Dealer score > 17
+          •Player > 18
+          •player > dealer <= 21 bankroll += pot
+          •compare dealer card total with player
+
+    Strech Goals
+      Annomate dealing of cards off the deck
+      Play with 4 decks or continous cards
+      Player has no $ must Stay! win/loose pot ?
+
+https://ga-students.slack.com/files/kristyn/F6AA69GCS/mvps_that_we_discussed_for_project_1.js

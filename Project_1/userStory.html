@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>User Story</title>
+  </head>
+  <body>
+    <ol>Blackjack MVP
+      <li>Setup background - Green Playing table</li>
+      <li>Show deck of cards on playing table</li>
+      <li>Set array of 52 card objects (suite, value)</li>
+      <li>Setup Player and Computer/Dealer objects</li>
+      <li>Random deal (pop or caount = 52) form card array updating html to display dealt cards</li>
+        <ul>
+          <li>bankroll -= $10.00 ante on start</li>
+          <li>update pot += ante or bet</li>
+          <li>2 cards delt to each player</li>
+          <li>calculate score for dealer/player</li>
+          <li>hit</li>
+            <ul>
+              <li>player bet amount (bankroll -= bet)</li>
+              <li>increase pot by bet</li>
+              <li>player takes another card</li>
+              <li>Player add total <= 21</li>
+              <li>Dealer/Computer may take card or not</li>
+              <li>Dealer/Computer add total <= 21</li>
+              <li>While dealer or player !busted or plater !stay</li>
+            </ul>
+          <li>stay</li>
+            <ul>
+              <li>compare dealer card total with player</li>
+              <li>player > dealer <= 21 bankroll += pot</li>
+            </ul>
+          <li>bet on continued play</li></li>
+          <li>cards in play for this hand</li>
+
+        </ul>
+
+    </ol>
+    <ul>Extras
+      <li>Annomate dealing of cards off the deck</li>
+      <li>Play with 4 decks or continous cards</li>
+    </ul>
+
+  </body>
+</html>
