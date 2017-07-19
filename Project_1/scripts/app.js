@@ -52,15 +52,19 @@ console.log('hooked up');
     }
   };
 
-  const placeyourBet = (Bet) => {
+  const placeyourBet = (bet) => {
     console.log('cards.deck.length', cards.deck.length);
 
     //test for dealCard return of null... nomore cards and EOG
     //if cards.deck.length < 4 --> EOG.
     //
+    //face up
     cards.playerCards.push(dealCard());
-    cards.playerCards.push(dealCard());
+    //face down
     cards.dealerCards.push(dealCard());
+    //face up
+    cards.playerCards.push(dealCard());
+    //face up
     cards.dealerCards.push(dealCard());
     console.log('cards.deck.length', cards.deck.length);
     //take the anti
@@ -69,11 +73,13 @@ console.log('hooked up');
     thePot+=bet;
   };
 
-  const scoreTotal = (cards) => {
+  const scoreTotal = (hand) => {
       let totalScore = 0;
-      for ( let i = 0; i < cards.length; i++ ) {
-        console.log('cards[' + i + '].value', cards[i][0].value);
-        totalScore+=cards[i][0].value;
+      // console.log('hand.length', hand.length);
+      for ( let i = 0; i < hand.length; i++ ) {
+        // cards.playerCards[0][0].value
+        // console.log('hand[' + i + '][0].value', hand[i][0].value);
+        totalScore+=hand[i][0].value;
       }
       return(totalScore);
   };
@@ -93,8 +99,14 @@ console.log('hooked up');
   let dealerScore = scoreTotal(cards.dealerCards);
   //dealer draws until >= 17
   while ( dealerScore < 17 ) {
+        console.log('dealer draws another card');
         cards.dealerCards.push(dealCard());
+        dealerScore = scoreTotal(cards.dealerCards);
   };
+  console.log('dealerScore', dealerScore);
+  //if dealerh up card is < 6 player takes hit
+  //JQuery to get dealer up card.....
+
 
   // //check cards
   // for (let i = 0; i < cards.deck.length; i++) {
