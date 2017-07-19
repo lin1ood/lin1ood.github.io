@@ -4,7 +4,7 @@ Project 1 -- Blackjack MVP
 done    • Setup background - Green Playing table
     • Show deck of cards on playing table
 done    • Set array of 52 card objects (suite, value)
-????    • Setup Player and Computer/Dealer objects
+done    • Setup Player and Computer/Dealer objects
 done    • Random deal (pop or count = 52) form card array updating html  to display dealt cards
   Player/Dealer(Computer)
 done    • bankroll -= bet on start (ante or end button)

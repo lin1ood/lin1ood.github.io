@@ -3,6 +3,7 @@ console.log('hooked up');
 
   let playerBankRoll = 500;
   let thePot = 0;
+  let bet = '';
 
   class Card {
     constructor(suit, value) {
@@ -44,8 +45,8 @@ console.log('hooked up');
 
   const dealCard = () => {
     if (cards.deck.length > 0) {
-      const randomIndex = Math.floor((Math.random() * 53) + 1);
-      // console.log('randomIndex', cards.deck[randomIndex]);
+      const randomIndex = Math.floor((Math.random() * (cards.deck.length)));
+      console.log('randomIndex', cards.deck[randomIndex]);
       return(cards.deck.splice(randomIndex, 1));
     } else {
       return(null);
@@ -77,12 +78,37 @@ console.log('hooked up');
       let totalScore = 0;
       // console.log('hand.length', hand.length);
       for ( let i = 0; i < hand.length; i++ ) {
-        // cards.playerCards[0][0].value
-        // console.log('hand[' + i + '][0].value', hand[i][0].value);
+        // hand.playerCards[0][0].value
+        console.log('hand[' + i + '][0].value', hand[i][0].value);
         totalScore+=hand[i][0].value;
       }
       return(totalScore);
   };
+
+  $('#bet').on('click', (e) => {
+    console.log('bet clicked');
+    // alert("The bet is not a valid value. Try again.")
+    do {
+      bet = $('input').val();
+      console.log(bet);
+      if ( !parseInt(bet) ) {
+        alert("The bet is not a valid value. Try again.")
+      };
+    } while ( !parseInt(bet) );
+    console.log('Outta the do while....');
+    //
+    // bet = $('input').val();
+    // if
+    // $(e.currentTarget).parent().css('display', 'none');
+    // console.log('Hello ', name);
+  });
+
+
+  // $('button').on('click', (e) => {
+  //   $('.squares').children().remove();
+  //   createSquares(50);
+  //   setGameTime();
+  // });
 
   createCards();
   //button ante up (2 cards each) get bet from input
@@ -103,7 +129,6 @@ console.log('hooked up');
         cards.dealerCards.push(dealCard());
         dealerScore = scoreTotal(cards.dealerCards);
   };
-  console.log('dealerScore', dealerScore);
   //if dealerh up card is < 6 player takes hit
   //JQuery to get dealer up card.....
 
@@ -112,7 +137,7 @@ console.log('hooked up');
   // for (let i = 0; i < cards.deck.length; i++) {
   //   console.log(cards.deck[i]);
   // }
-  console.log('cards.deck.length', cards.deck.length)
+  // console.log('cards.deck.length', cards.deck.length)
   // console.log('cards.playerCards', cards.playerCards.length);
   // console.log('FaceCard', cards.playerCards[0][0] instanceof FaceCard );
   // console.log('FaceCard', cards.playerCards[1][0] instanceof FaceCard );

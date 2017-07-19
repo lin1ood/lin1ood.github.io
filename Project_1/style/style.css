@@ -2,3 +2,23 @@ body {
   border: 1px solid purple;
   background-color: green;
 }
+
+h1 {
+    text-align: center;
+    font-size: 3em;
+}
+
+input {
+  display: inline-block;
+  float: right;
+  margin-right: 50%;
+  margin-top: 250px;
+}
+
+#bet {
+  display: inline-block;
+  float: right;
+  margin-right: 50%;
+  margin-top: 5px;
+
+}
