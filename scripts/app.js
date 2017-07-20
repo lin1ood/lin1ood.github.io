@@ -48,7 +48,7 @@ $(()=>{
   const dealCard = () => {
     if (cards.deck.length > 0) {
       const randomIndex = Math.floor((Math.random() * (cards.deck.length)));
-      // console.log('randomIndex', cards.deck[randomIndex]);
+      console.log('cards.deck[randomIndex]', cards.deck[randomIndex]);
       return(cards.deck.splice(randomIndex, 1));
     } else {
       //don't think I will ever get here cause splice updates the cards array length preventing the random index from landing outside the array...
@@ -90,6 +90,7 @@ $(()=>{
     cardInPlay = dealCard();
     $('#dealer').append(getCardImg(cardInPlay, faceUp));
     cards.dealerCards.push(cardInPlay);
+    console.log('The Hole Card:', cardInPlay)
     //face up
     cardInPlay = dealCard();
     $('#player').append(getCardImg(cardInPlay, faceUp));
@@ -98,11 +99,14 @@ $(()=>{
     cardInPlay = dealCard();
     $('#dealer').append(getCardImg(cardInPlay, !faceUp));
     cards.dealerCards.push(cardInPlay);
-    // console.log('cards.deck.length', cards.deck.length);
-    //take the anti
-    playerBankRoll-=bet;
-    //no 2:3 nor 5:7 yet....
-    thePot+=bet;
+  };
+
+  const hitMe = ($element) => {
+    const faceUp = true;
+    let cardInPlay = dealCard();
+    console.log('cardInPlay', cardInPlay);
+    $element.append(getCardImg(cardInPlay, faceUp));
+    cards.playerCards.push(cardInPlay);
   };
 
   const scoreTotal = (hand) => {
@@ -125,8 +129,7 @@ $(()=>{
     });
     //get the input -- bet
     bet = $('input').val();
-    //update input with message on Invalid Input
-    if (!parseInt(bet) || bet > playerBankRoll) {
+    if (!parseInt(bet) || playerBankRoll < 0) {
       console.log('!parseInt(bet) || bet > playerBankRoll');
       $('input').val("Invalid! Try Again").css({
         'background-color' : 'red',
@@ -140,27 +143,36 @@ $(()=>{
   };
 
   //build the Deck of Cards (just 1 Deck for now)
-  console.log('createCards');
+  // console.log('createCards');
   createCards();
-  //button ante up (2 cards each) get bet from input
-  //if bankroll <= 0 EOG
-  // console.log($('#bet').on('click', betClicked));
-  // console.log('waiting for betClicked');
-  console.log('setup event listener on start/bet button');
+  // console.log('setup event listener on start/bet button');
   $('#bet').on('click', () => {
     //bet submitted (input) on click
     console.log('bet =', bet);
 
     //get Valid Bet the input
-    if (!getValidBet()) {
+    //if bankroll < 0 EOG
+    //player can bet their last $
+    if (!getValidBet() && playerBankRoll >= 0) {
       console.log('return to try again later');
       //invalid input so wait for another input
       //and button click with a valid value - maybe
       //can't start the game so......
+
+      //todo: alert -- if playerBankRoll <= 0
+      //go get more $$  OR just Game Over!!!!
       return;
     } else {
-      //valid bet so what is player bankroll
-      console.log('playerBankRoll', playerBankRoll);
+      // //play a round
+      // roundPlayed++;
+      // //deduct player bet from playerBankRoll
+      // playerBankRoll-=bet;
+      //
+      // //todo: this may not be the best place yet.....
+      // //no 2:3 nor 5:7 yet....
+      // thePot+=bet;
+      //
+      // console.log('playerBankRoll', playerBankRoll);
 
       //input good play the game.........
       //todo: Turn off #bet button and go play  -- play here for now
@@ -172,22 +184,68 @@ $(()=>{
       // // let hitme = false;
       let playerScore = scoreTotal(cards.playerCards);
       //player hit or stay......
-      //algorithm for hit or stay
+      //algorithm for hit or stay - for now.....
+      //if dealer up card is < 6 player takes hit
+    if ( cards.dealerCards[1].value < 6 ) {
+        while (scoreTotal(cards.playerCards) <= 17 && cards.deck.length > 0) {
+          hitMe($('#player'));
+        }
+      }
+
+      //JQuery to flip the hole card up.....
+      const faceUp = true;
+      let holeCardImg = (cards.dealerCards[1], faceUp);
+      $('#dealer').eq(1).attr({
+          src: holeCardImg
+      });
+
 
       let dealerScore = scoreTotal(cards.dealerCards);
-      //dealer draws until >= 17
-      while ( dealerScore < 17 ) {
-            console.log('dealer draws another card');
-            cards.dealerCards.push(dealCard());
-            dealerScore = scoreTotal(cards.dealerCards);
-      };
-      //if dealerh up card is < 6 player takes hit
-      //JQuery to get dealer up card.....
+      // //dealer draws until >= 17
+      // while ( scoreTotal(cards.dealerCards) < 17 && cards.deck.length > 0) {
+      //   console.log('dealer draws another card');
+      //   hitMe($('#dealer'));
+      // };
+
+
       console.log('playerScore', playerScore);
       console.log('dealerScore', dealerScore);
       console.log('clean up');
-      $('input').val("");
-      bet = '';
+
+      if (playerScore < 21 && playerScore > dealerScore) {
+        playerBankRoll += thePot;
+        thePot = 0;
+        bet = '';
+        roundPlayed++;
+        cards.dealerCards = [];
+        cards.playerCards = [];
+        console.log('Player Wins!!', playerScore);
+        console.log('Dealer loose', dealerScore);
+
+      } else if (dealerScore < 21 && dealerScore > playerScore) {
+        playerBankRoll -= thePot;
+        thePot = 0;
+        bet = '';
+        roundPlayed++;
+        cards.dealerCards = [];
+        cards.playerCards = [];
+        console.log('Dealer Wins!!', dealerScore);
+        console.log('Player loose', playerScore);
+      } else if (playerScore === dealerScore) {
+        //it is a push
+        playerBankRoll += bet;
+        thePot = 0;
+        bet = '';
+        roundPlayed++;
+        cards.dealerCards = [];
+        cards.playerCards = [];
+        console.log('Push!!');
+        console.log('playerScore', playerScore);
+        console.log('dealerScore', dealerScore);
+      };
+
+      // $('input').val("");
+      // bet = '';
     };
   });
 
