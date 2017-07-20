@@ -127,6 +127,11 @@ $(()=>{
       'background-color' : 'white',
       'font-weight' : 'none'
     });
+    //todo: cleanup cards....
+    //first attempt
+    cards.dealerCards = [];
+    cards.playerCards = [];
+
     //get the input -- bet
     bet = $('input').val();
     if (!parseInt(bet) || playerBankRoll < 0) {
@@ -203,11 +208,11 @@ $(()=>{
 
 
       let dealerScore = scoreTotal(cards.dealerCards);
-      // //dealer draws until >= 17
-      // while ( scoreTotal(cards.dealerCards) < 17 && cards.deck.length > 0) {
-      //   console.log('dealer draws another card');
-      //   hitMe($('#dealer'));
-      // };
+      //dealer draws until >= 17
+      while ( scoreTotal(cards.dealerCards) < 17 && cards.deck.length > 0) {
+        console.log('dealer draws another card');
+        hitMe($('#dealer'));
+      };
 
 
       console.log('playerScore', playerScore);
@@ -220,8 +225,10 @@ $(()=>{
         thePot = 0;
         bet = '';
         roundPlayed++;
-        cards.dealerCards = [];
-        cards.playerCards = [];
+        // cards.dealerCards = [];
+        // cards.playerCards = [];
+        $('#player').children().remove();
+        $('#dealer').children().remove();
         console.log('Player Wins!!', playerScore);
         console.log('Dealer loose', dealerScore);
 
@@ -232,6 +239,8 @@ $(()=>{
         roundPlayed++;
         cards.dealerCards = [];
         cards.playerCards = [];
+        // $('#player').children().remove();
+        // $('#dealer').children().remove();
         console.log('Dealer Wins!!', dealerScore);
         console.log('Player loose', playerScore);
       } else if (playerScore === dealerScore) {
@@ -242,6 +251,8 @@ $(()=>{
         roundPlayed++;
         cards.dealerCards = [];
         cards.playerCards = [];
+        // $('#player').children().remove();
+        // $('#dealer').children().remove();
         console.log('Push!!');
         console.log('playerScore', playerScore);
         console.log('dealerScore', dealerScore);
