@@ -57,11 +57,18 @@ $(()=>{
     }
   };
 
-  const getCardImg = (playingCard) => {
-    const $cardImage = $('<img/>');
+  const getCardImg = (playingCard, faceUp) => {
     console.log('playingCard[0].img', playingCard[0].img);
+    let cardPic = playingCard[0].img;
+    if (!faceUp) {
+      cardPic = 'img/back.bmp'
+    };
+
+    //create a card image to append to the player/dealer div.
+    const $cardImage = $('<img/>');
+
     $cardImage.attr({
-        src: playingCard[0].img,
+        src: cardPic,
         height: "125px",
         width: "75px"
     });
@@ -70,21 +77,27 @@ $(()=>{
 
   const openingDeal = () => {
     // console.log('cards.deck.length', cards.deck.length);
-
+    const faceUp = true;
     //test for dealCard return of null... nomore cards and EOG
     //if cards.deck.length < 4 --> EOG.
     //
     //face up
     let cardInPlay = dealCard();
     console.log('cardInPlay', cardInPlay);
-    $('#player').append(getCardImg(cardInPlay));
+    $('#player').append(getCardImg(cardInPlay, faceUp));
     cards.playerCards.push(cardInPlay);
-    //face down
-    cards.dealerCards.push(dealCard());
+    //not face up (down) -- The Hole Card
+    cardInPlay = dealCard();
+    $('#dealer').append(getCardImg(cardInPlay, !faceUp));
+    cards.dealerCards.push(cardInPlay);
     //face up
-    cards.playerCards.push(dealCard());
+    cardInPlay = dealCard();
+    $('#player').append(getCardImg(cardInPlay, faceUp));
+    cards.playerCards.push(cardInPlay);
     //face up
-    cards.dealerCards.push(dealCard());
+    cardInPlay = dealCard();
+    $('#dealer').append(getCardImg(cardInPlay, faceUp));
+    cards.dealerCards.push(cardInPlay);
     // console.log('cards.deck.length', cards.deck.length);
     //take the anti
     playerBankRoll-=bet;
