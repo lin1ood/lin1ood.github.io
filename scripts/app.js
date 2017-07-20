@@ -48,7 +48,7 @@ $(()=>{
   const dealCard = () => {
     if (cards.deck.length > 0) {
       const randomIndex = Math.floor((Math.random() * (cards.deck.length)));
-      console.log('cards.deck[randomIndex]', cards.deck[randomIndex]);
+      // console.log('cards.deck[randomIndex]', cards.deck[randomIndex]);
       return(cards.deck.splice(randomIndex, 1));
     } else {
       //don't think I will ever get here cause splice updates the cards array length preventing the random index from landing outside the array...
@@ -83,14 +83,13 @@ $(()=>{
     //
     //face up
     let cardInPlay = dealCard();
-    console.log('cardInPlay', cardInPlay);
+    // console.log('cardInPlay', cardInPlay);
     $('#player').append(getCardImg(cardInPlay, faceUp));
     cards.playerCards.push(cardInPlay);
     //not face up (down) -- The Hole Card
     cardInPlay = dealCard();
     $('#dealer').append(getCardImg(cardInPlay, faceUp));
     cards.dealerCards.push(cardInPlay);
-    console.log('The Hole Card:', cardInPlay)
     //face up
     cardInPlay = dealCard();
     $('#player').append(getCardImg(cardInPlay, faceUp));
@@ -99,12 +98,13 @@ $(()=>{
     cardInPlay = dealCard();
     $('#dealer').append(getCardImg(cardInPlay, !faceUp));
     cards.dealerCards.push(cardInPlay);
+    console.log('The Hole Card:', cardInPlay)
   };
 
   const hitMe = ($element) => {
     const faceUp = true;
     let cardInPlay = dealCard();
-    console.log('cardInPlay', cardInPlay);
+    // console.log('cardInPlay', cardInPlay);
     $element.append(getCardImg(cardInPlay, faceUp));
     cards.playerCards.push(cardInPlay);
   };
@@ -113,7 +113,7 @@ $(()=>{
       let totalScore = 0;
       // console.log('hand.length', hand.length);
       for ( let i = 0; i < hand.length; i++ ) {
-        // hand.playerCards[0][0].value
+        console.log('hand['+ i + '] [0].value', hand[i][0].value);
         // console.log('hand[' + i + '][0].value', hand[i][0].value);
         totalScore+=hand[i][0].value;
       }
@@ -130,7 +130,7 @@ $(()=>{
     //get the input -- bet
     bet = $('input').val();
     if (!parseInt(bet) || playerBankRoll < 0) {
-      console.log('!parseInt(bet) || bet > playerBankRoll');
+      // console.log('!parseInt(bet) || bet > playerBankRoll');
       $('input').val("Invalid! Try Again").css({
         'background-color' : 'red',
         'font-weight' : 'bold'
@@ -148,7 +148,7 @@ $(()=>{
   // console.log('setup event listener on start/bet button');
   $('#bet').on('click', () => {
     //bet submitted (input) on click
-    console.log('bet =', bet);
+    // console.log('bet =', bet);
 
     //get Valid Bet the input
     //if bankroll < 0 EOG
@@ -194,9 +194,11 @@ $(()=>{
 
       //JQuery to flip the hole card up.....
       const faceUp = true;
-      let holeCardImg = (cards.dealerCards[1], faceUp);
-      $('#dealer').eq(1).attr({
-          src: holeCardImg
+      // let holeCardImg = getCardImg(cards.dealerCards[1], faceUp);
+      console.log('Turn over the hole card', cards.dealerCards[1][0].img);
+      console.log("$('#dealer').eq(1)", $('#dealer').children().eq(1));
+      $('#dealer').children().eq(1).attr({
+          src: cards.dealerCards[1][0].img
       });
 
 
@@ -213,7 +215,8 @@ $(()=>{
       console.log('clean up');
 
       if (playerScore < 21 && playerScore > dealerScore) {
-        playerBankRoll += thePot;
+        playerBankRoll = playerBankRoll + thePot;
+//        playerBankRoll += thePot;
         thePot = 0;
         bet = '';
         roundPlayed++;
@@ -223,7 +226,7 @@ $(()=>{
         console.log('Dealer loose', dealerScore);
 
       } else if (dealerScore < 21 && dealerScore > playerScore) {
-        playerBankRoll -= thePot;
+        playerBankRoll = playerBankRoll - thePot;
         thePot = 0;
         bet = '';
         roundPlayed++;
@@ -243,7 +246,14 @@ $(()=>{
         console.log('playerScore', playerScore);
         console.log('dealerScore', dealerScore);
       };
-
+      //check the cleanup.....
+      console.log('playerBankRoll', playerBankRoll);
+      console.log('roundPlayed', roundPlayed);
+      console.log('cards.deck.length', cards.deck.length);
+      console.log('cards.playerCards.length', cards.playerCards.length);
+      console.log('cards.dealerCards.length', cards.dealerCards.length);
+      console.log('thePot', thePot);
+      console.log('bet' , bet);
       // $('input').val("");
       // bet = '';
     };
