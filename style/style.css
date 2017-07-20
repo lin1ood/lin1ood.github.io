@@ -3,9 +3,9 @@ body {
   background-color: green;
 }
 
-* {
+/** {
   border: 2px dashed red;
-}
+}*/
 
 .players {
   display: inline-block;
