@@ -57,6 +57,17 @@ $(()=>{
     }
   };
 
+  const getCardImg = (playingCard) => {
+    const $cardImage = $('<img/>');
+    console.log('playingCard[0].img', playingCard[0].img);
+    $cardImage.attr({
+        src: playingCard[0].img,
+        height: "125px",
+        width: "75px"
+    });
+    return($cardImage);
+  };
+
   const openingDeal = () => {
     // console.log('cards.deck.length', cards.deck.length);
 
@@ -64,8 +75,10 @@ $(()=>{
     //if cards.deck.length < 4 --> EOG.
     //
     //face up
-    let cardInPlay = '';
-    cards.playerCards.push(dealCard());
+    let cardInPlay = dealCard();
+    console.log('cardInPlay', cardInPlay);
+    $('#player').append(getCardImg(cardInPlay));
+    cards.playerCards.push(cardInPlay);
     //face down
     cards.dealerCards.push(dealCard());
     //face up
