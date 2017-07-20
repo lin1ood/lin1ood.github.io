@@ -88,7 +88,7 @@ $(()=>{
     cards.playerCards.push(cardInPlay);
     //not face up (down) -- The Hole Card
     cardInPlay = dealCard();
-    $('#dealer').append(getCardImg(cardInPlay, !faceUp));
+    $('#dealer').append(getCardImg(cardInPlay, faceUp));
     cards.dealerCards.push(cardInPlay);
     //face up
     cardInPlay = dealCard();
@@ -96,7 +96,7 @@ $(()=>{
     cards.playerCards.push(cardInPlay);
     //face up
     cardInPlay = dealCard();
-    $('#dealer').append(getCardImg(cardInPlay, faceUp));
+    $('#dealer').append(getCardImg(cardInPlay, !faceUp));
     cards.dealerCards.push(cardInPlay);
     // console.log('cards.deck.length', cards.deck.length);
     //take the anti
