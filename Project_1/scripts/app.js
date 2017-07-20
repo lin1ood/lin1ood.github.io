@@ -1,9 +1,10 @@
 $(()=>{
-console.log('hooked up');
+// console.log('hooked up');
 
   let playerBankRoll = 500;
   let thePot = 0;
   let bet = '';
+  let roundPlayed = 0;
 
   class Card {
     constructor(suit, value) {
@@ -46,7 +47,7 @@ console.log('hooked up');
   const dealCard = () => {
     if (cards.deck.length > 0) {
       const randomIndex = Math.floor((Math.random() * (cards.deck.length)));
-      console.log('randomIndex', cards.deck[randomIndex]);
+      // console.log('randomIndex', cards.deck[randomIndex]);
       return(cards.deck.splice(randomIndex, 1));
     } else {
       return(null);
@@ -54,7 +55,7 @@ console.log('hooked up');
   };
 
   const placeyourBet = (bet) => {
-    console.log('cards.deck.length', cards.deck.length);
+    // console.log('cards.deck.length', cards.deck.length);
 
     //test for dealCard return of null... nomore cards and EOG
     //if cards.deck.length < 4 --> EOG.
@@ -67,7 +68,7 @@ console.log('hooked up');
     cards.playerCards.push(dealCard());
     //face up
     cards.dealerCards.push(dealCard());
-    console.log('cards.deck.length', cards.deck.length);
+    // console.log('cards.deck.length', cards.deck.length);
     //take the anti
     playerBankRoll-=bet;
     //no 2:3 nor 5:7 yet....
@@ -79,77 +80,126 @@ console.log('hooked up');
       // console.log('hand.length', hand.length);
       for ( let i = 0; i < hand.length; i++ ) {
         // hand.playerCards[0][0].value
-        console.log('hand[' + i + '][0].value', hand[i][0].value);
+        // console.log('hand[' + i + '][0].value', hand[i][0].value);
         totalScore+=hand[i][0].value;
       }
       return(totalScore);
   };
 
-  $('#bet').on('click', (e) => {
-    console.log('bet clicked');
-    // alert("The bet is not a valid value. Try again.")
-    do {
-      bet = $('input').val();
-      console.log(bet);
-      if ( !parseInt(bet) ) {
-        alert("The bet is not a valid value. Try again.")
-      };
-    } while ( !parseInt(bet) );
-    console.log('Outta the do while....');
-    //
-    // bet = $('input').val();
-    // if
-    // $(e.currentTarget).parent().css('display', 'none');
-    // console.log('Hello ', name);
-  });
-
-
+  const betClicked = () => {
+    console.log('betClicked');
+    bet = $('input').val();
+    // .css({
+    //   'background-color' : 'none',
+    //   'font-weight' : 'none'
+    // });;
+    // bet = parseInt(bet);
+    console.log('betClicked', bet);
+    if (!parseInt(bet) || bet > playerBankRoll) {
+      console.log('!parseInt(bet) || bet > playerBankRoll');
+      $('input').val("Invalid Value").css({
+        'background-color' : 'red',
+        'font-weight' : 'bold'
+      });
+    }
+    return;
+  };
   // $('button').on('click', (e) => {
   //   $('.squares').children().remove();
   //   createSquares(50);
   //   setGameTime();
   // });
 
+  console.log('createCards');
   createCards();
   //button ante up (2 cards each) get bet from input
   //if bankroll <= 0 EOG
-  placeyourBet(10);
+  // console.log($('#bet').on('click', betClicked));
+  // console.log('waiting for betClicked');
+  $('#bet').on('click', () => {
+    //clear input JIC we got Invalid input last time
+    $('input').css({
+      'background-color' : 'none',
+      'font-weight' : 'none'
+    });
 
-  //Player draws till > 17  if dealer up card is < 6 or stay
-  // let hitme = false;
-  let playerScore = scoreTotal(cards.playerCards);
-  //player hit or stay......
-  //algorithm for hit or stay
+    bet = $('input').val();
+    if (!parseInt(bet) || bet > playerBankRoll ) {
+      $('input').val("Invalid Value").css({
+        'background-color' : 'red',
+        'font-weight' : 'bold'
+      });
+      return;
+    };
+    //input good play the game.........
+  });
+    // while (!(bet) || bet > playerBankRoll) {
+    //   // alert("The bet is not a valid value. Try again.")
+    //   bet = betClicked();
+    // }
+
+    // // console.log('bet clicked');
+    // // alert("The bet is not a valid value. Try again.")
+    // //placeyourBet(bet)-- figure out how to loop on input
+    // // console.log('playerBankRoll', playerBankRoll);
+    // do {
+    //   bet = $('input').val();
+    //   console.log('bet', bet);
+    //   if ( !parseInt(bet) || bet > playerBankRoll) {
+    //     // alert("The bet is not a valid value. Enter a valid value here...");
+    //     // $('input').val("Invalid Value").css({
+    //       // 'background-color' : 'red',
+    //       // 'font-weight' : 'bold'
+    //     // });
+    //     bet = '';
+    //     console.log('returning false');
+    //     return (false);
+    //   };
+    // } while ( !parseInt(bet) || bet > playerBankRoll );
+    // return(true);
+    // // $('input').val('$' + bet + '.00').css({'background-color' : 'none'});
+    // //
+    // // bet = $('input').val();
+    // // if
+    // // $(e.currentTarget).parent().css('display', 'none');
+    // // console.log('Hello ', name);
+    placeyourBet(bet);
+    // // roundPlayed++;
+    // //Player draws till > 17  if dealer up card is < 6 or stay
+    // // let hitme = false;
+    let playerScore = scoreTotal(cards.playerCards);
+    //player hit or stay......
+    //algorithm for hit or stay
 
 
-  let dealerScore = scoreTotal(cards.dealerCards);
-  //dealer draws until >= 17
-  while ( dealerScore < 17 ) {
-        console.log('dealer draws another card');
-        cards.dealerCards.push(dealCard());
-        dealerScore = scoreTotal(cards.dealerCards);
-  };
-  //if dealerh up card is < 6 player takes hit
-  //JQuery to get dealer up card.....
+    let dealerScore = scoreTotal(cards.dealerCards);
+    //dealer draws until >= 17
+    while ( dealerScore < 17 ) {
+          console.log('dealer draws another card');
+          cards.dealerCards.push(dealCard());
+          dealerScore = scoreTotal(cards.dealerCards);
+    };
+    //if dealerh up card is < 6 player takes hit
+    //JQuery to get dealer up card.....
 
 
-  // //check cards
-  // for (let i = 0; i < cards.deck.length; i++) {
-  //   console.log(cards.deck[i]);
-  // }
-  // console.log('cards.deck.length', cards.deck.length)
-  // console.log('cards.playerCards', cards.playerCards.length);
-  // console.log('FaceCard', cards.playerCards[0][0] instanceof FaceCard );
-  // console.log('FaceCard', cards.playerCards[1][0] instanceof FaceCard );
-  // console.log(cards.playerCards[0][0].value);
-  // console.log(cards.playerCards[1][0].value);
-  // console.log(cards.playerCards[0][0].face);
-  // console.log(cards.playerCards[1][0].face);
-  // console.log('cards.dealerCards', cards.dealerCards.length);
-  // console.log(cards.dealerCards[0][0].value);
-  // console.log(cards.dealerCards[1][0].value);
-  //
-  console.log('playerScore', playerScore);
-  console.log('dealerScore', dealerScore);
+    // //check cards
+    // for (let i = 0; i < cards.deck.length; i++) {
+    //   console.log(cards.deck[i]);
+    // }
+    // console.log('cards.deck.length', cards.deck.length)
+    // console.log('cards.playerCards', cards.playerCards.length);
+    // console.log('FaceCard', cards.playerCards[0][0] instanceof FaceCard );
+    // console.log('FaceCard', cards.playerCards[1][0] instanceof FaceCard );
+    // console.log(cards.playerCards[0][0].value);
+    // console.log(cards.playerCards[1][0].value);
+    // console.log(cards.playerCards[0][0].face);
+    // console.log(cards.playerCards[1][0].face);
+    // console.log('cards.dealerCards', cards.dealerCards.length);
+    // console.log(cards.dealerCards[0][0].value);
+    // console.log(cards.dealerCards[1][0].value);
+    //
+    console.log('playerScore', playerScore);
+    console.log('dealerScore', dealerScore);
 
 });

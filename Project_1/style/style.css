@@ -15,10 +15,15 @@ input {
   margin-top: 250px;
 }
 
-#bet {
+#bet  {
   display: inline-block;
   float: right;
   margin-right: 50%;
   margin-top: 5px;
+}
 
+#hit-me {
+  height: 60px;
+  width: 100px;
+  display: inline-block;
 }
