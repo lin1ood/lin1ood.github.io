@@ -86,30 +86,30 @@ $(()=>{
       return(totalScore);
   };
 
-  const betClicked = () => {
+  const getValidBet = () => {
     console.log('betClicked');
-    bet = $('input').val();
+    //clean up the input box form last time
     $('input').css({
       'background-color' : 'white',
       'font-weight' : 'none'
     });
-    // bet = parseInt(bet);
-    console.log('betClicked', bet);
+    //get the input -- bet
+    bet = $('input').val();
+    //update input with message on Invalid Input
     if (!parseInt(bet) || bet > playerBankRoll) {
       console.log('!parseInt(bet) || bet > playerBankRoll');
-      $('input').val("Invalid Value").css({
+      $('input').val("Invalid! Try Again").css({
         'background-color' : 'red',
         'font-weight' : 'bold'
       });
+      return(false);
     }
-    return;
+    //input is a non-blocking call so just leave!!!
+    //and wait for the next button to check again.....
+    return(true);
   };
-  // $('button').on('click', (e) => {
-  //   $('.squares').children().remove();
-  //   createSquares(50);
-  //   setGameTime();
-  // });
 
+  //build the Deck of Cards (just 1 Deck for now)
   console.log('createCards');
   createCards();
   //button ante up (2 cards each) get bet from input
@@ -118,29 +118,24 @@ $(()=>{
   // console.log('waiting for betClicked');
   console.log('setup event listener on start/bet button');
   $('#bet').on('click', () => {
-    //clear input JIC we got Invalid input last time
-    // $('input').css({
-    //   'background-color' : 'none',
-    //   'font-weight' : 'none'
-    // });
-
-    //get & validate the input
-    betClicked();
-
+    //bet submitted (input) on click
     console.log('bet =', bet);
-    if (!parseInt(bet) || bet > playerBankRoll ) {
-      $('input').val("Invalid Value").css({
-        'background-color' : 'red',
-        'font-weight' : 'bold'
-      });
+
+    //get Valid Bet the input
+    if (!getValidBet()) {
       console.log('return to try again later');
+      //invalid input so wait for another input
+      //and button click with a valid value - maybe
+      //can't start the game so......
       return;
     } else {
-      //input good play the game.........
-      //Turn off #bet button and go play  -- play here for now
-      //Turn it on again at the end of the round.....
-      openingDeal();
+      //valid bet so what is player bankroll
       console.log('playerBankRoll', playerBankRoll);
+
+      //input good play the game.........
+      //todo: Turn off #bet button and go play  -- play here for now
+      //todo: Turn it on again at the end of the round.....
+      openingDeal();
       //player hit or stay......
       //algorithm for hit or stay
       // //Player draws till > 17  if dealer up card is < 6 or stay
