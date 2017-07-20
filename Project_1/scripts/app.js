@@ -89,10 +89,10 @@ $(()=>{
   const betClicked = () => {
     console.log('betClicked');
     bet = $('input').val();
-    $('input').css({
-      'background-color' : 'white',
-      'font-weight' : 'none'
-    });
+    // .css({
+    //   'background-color' : 'none',
+    //   'font-weight' : 'none'
+    // });;
     // bet = parseInt(bet);
     console.log('betClicked', bet);
     if (!parseInt(bet) || bet > playerBankRoll) {
@@ -119,15 +119,9 @@ $(()=>{
   console.log('setup event listener on start/bet button');
   $('#bet').on('click', () => {
     //clear input JIC we got Invalid input last time
-    // $('input').css({
-    //   'background-color' : 'none',
-    //   'font-weight' : 'none'
-    // });
+    $('input').val('');
 
-    //get & validate the input
-    betClicked();
-
-    console.log('bet =', bet);
+    bet = $('input').val();
     if (!parseInt(bet) || bet > playerBankRoll ) {
       $('input').val("Invalid Value").css({
         'background-color' : 'red',
@@ -143,11 +137,7 @@ $(()=>{
       console.log('playerBankRoll', playerBankRoll);
       //player hit or stay......
       //algorithm for hit or stay
-      // //Player draws till > 17  if dealer up card is < 6 or stay
-      // // let hitme = false;
-      let playerScore = scoreTotal(cards.playerCards);
-      //player hit or stay......
-      //algorithm for hit or stay
+
 
       let dealerScore = scoreTotal(cards.dealerCards);
       //dealer draws until >= 17
@@ -160,8 +150,6 @@ $(()=>{
       //JQuery to get dealer up card.....
       console.log('playerScore', playerScore);
       console.log('dealerScore', dealerScore);
-      console.log('clean up');
-      $('input').val("");
       bet = '';
     };
   });
