@@ -7,15 +7,16 @@ $(()=>{
   let roundPlayed = 0;
 
   class Card {
-    constructor(suit, value) {
+    constructor(suit, value, img) {
       this.suit = suit;
       this.value = value;
+      this.img = 'img/' + img;
     }
   };
 
   class FaceCard extends Card {
-    constructor(suit, value, face) {
-      super(suit, value);
+    constructor(suit, value, img, face) {
+      super(suit, value, img);
       this.face = face;
     }
   }
@@ -34,13 +35,13 @@ $(()=>{
     for ( let i = 0; i < suit.length; i++ ) {
       //create Ace - 10
       for (let j = 2; j <= 10; j++ ) {
-        cards.deck.push(new Card(suit[i], j));
+        cards.deck.push(new Card(suit[i], j, suit[i]+j+".bmp"));
       }
       //update Ace face
-      cards.deck.push(new FaceCard(suit[i], 11, 'Ace'));
-      cards.deck.push(new FaceCard(suit[i], 10, 'Jack'));
-      cards.deck.push(new FaceCard(suit[i], 10, 'Queen'));
-      cards.deck.push(new FaceCard(suit[i], 10, 'King'));
+      cards.deck.push(new FaceCard(suit[i], 11, suit[i]+"1.bmp", 'Ace'));
+      cards.deck.push(new FaceCard(suit[i], 10, suit[i]+"11.bmp", 'Jack'));
+      cards.deck.push(new FaceCard(suit[i], 10, suit[i]+"12.bmp", 'Queen'));
+      cards.deck.push(new FaceCard(suit[i], 10, suit[i]+"13.bmp", 'King'));
     }
   };
 
@@ -50,6 +51,8 @@ $(()=>{
       // console.log('randomIndex', cards.deck[randomIndex]);
       return(cards.deck.splice(randomIndex, 1));
     } else {
+      //don't think I will ever get here cause splice updates the cards array length preventing the random index from landing outside the array...
+      //but this did server its purpose in early development/verificaiton
       return(null);
     }
   };
@@ -61,6 +64,7 @@ $(()=>{
     //if cards.deck.length < 4 --> EOG.
     //
     //face up
+    let cardInPlay = '';
     cards.playerCards.push(dealCard());
     //face down
     cards.dealerCards.push(dealCard());
@@ -213,9 +217,9 @@ $(()=>{
     //
     //
     // // //check cards
-    // // for (let i = 0; i < cards.deck.length; i++) {
-    // //   console.log(cards.deck[i]);
-    // // }
+    // for (let i = 0; i < cards.deck.length; i++) {
+    //   console.log(cards.deck[i]);
+    // }
     // // console.log('cards.deck.length', cards.deck.length)
     // // console.log('cards.playerCards', cards.playerCards.length);
     // // console.log('FaceCard', cards.playerCards[0][0] instanceof FaceCard );
