@@ -158,19 +158,11 @@ $(()=>{
         //can't start the game so......
         return;
       } else {
-        // //deduct player bet from playerBankRoll
-        playerBankRoll-=bet;
-        // console.log('playerBankRoll', playerBankRoll);
-
-        //todo: this may not be the best place yet.....
+        //set the bet for this round -- betting only once.
         //no 2:3 nor 5:7 yet....
         thePot+=bet;
-
         //input good play the game.........
-        //todo: Turn off #bet button and go play  -- play here for now
-        //todo: Turn it on again at the end of the round.....
         openingDeal();
-
       };
   };
 
@@ -250,6 +242,10 @@ $(()=>{
     // bet = '';
 
   };
+  //hide non user flow buttons
+  //don't show if it is not needed
+  $('#hit-me').css('visibility', 'hidden');
+  $('#stay').css('visibility', 'hidden');
 
   //build the Deck of Cards (just 1 Deck for now)
   // console.log('createCards');
@@ -260,13 +256,17 @@ $(()=>{
     betButton();
     //Bet made -- turn button off for now -- till game finished or ended
     $('#bet').off();
+    $('#bet').css('visibility', 'hidden');
+    $('#hit-me').css('visibility', 'visible');
+    $('#stay').css('visibility', 'visible');
+
     //Players turn to hit or stand so.. turn on those buttons
     $('#hit-me').on('click', () => {
       console.log('hit-me clicked');
       //do all the hitme code
-      if (scoreTotal(cards.playerCards) < 21) {
-        playerPlayHand();
-      } else {
+      playerPlayHand();
+      if (scoreTotal(cards.playerCards) > 21) {
+      // } else {
         $('#stay').trigger('click');
       };
     });
