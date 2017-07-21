@@ -133,7 +133,7 @@ $(()=>{
     bet = $('input').val();
     if (!parseInt(bet) || playerBankRoll < 0) {
       // console.log('!parseInt(bet) || bet > playerBankRoll');
-      $('input').val("Invalid! Try Again").css({
+      $('input').attr("placeholder", "Invalid! Try Again").css({
         'background-color' : 'red',
         'font-weight' : 'bold'
       });
@@ -156,21 +156,15 @@ $(()=>{
         //invalid input so wait for another input
         //and button click with a valid value - maybe
         //can't start the game so......
-
-        //todo: alert -- if playerBankRoll <= 0
-        //go get more $$  OR just Game Over!!!!
         return;
       } else {
-        // //play a round
-        // roundPlayed++;
         // //deduct player bet from playerBankRoll
-        // playerBankRoll-=bet;
-        //
+        playerBankRoll-=bet;
+        // console.log('playerBankRoll', playerBankRoll);
+
         //todo: this may not be the best place yet.....
         //no 2:3 nor 5:7 yet....
         thePot+=bet;
-
-        // console.log('playerBankRoll', playerBankRoll);
 
         //input good play the game.........
         //todo: Turn off #bet button and go play  -- play here for now
@@ -188,13 +182,8 @@ $(()=>{
     //player hit or stay......
     //algorithm for hit or stay - for now.....
     //if dealer up card is < 6 player takes hit
-    console.log('playerPlayHand Entry');
-    console.log('cards.dealerCards[1][0].value', cards.dealerCards[1][0].value);
-  // if ( cards.dealerCards[1][0].value < 6 ) {
-      // while (scoreTotal(cards.playerCards) <= 17 && cards.deck.length > 0) {
-        hitMe($('#player'));
-      // };
-    // };
+    // console.log('playerPlayHand Entry');
+    hitMe($('#player'));
     return;
   };
 
@@ -225,54 +214,30 @@ $(()=>{
     // console.log('clean up');
 
     if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
+      //player gets the pot
       playerBankRoll += parseInt(thePot);
-      // console.log('Player -> bet', bet);
-      // console.log('Player Win -> thePot', thePot);
-      // console.log('Player Win -> playerBankRoll', playerBankRoll);
-      thePot = 0;
-      bet = '';
-      roundPlayed++;
-      cards.dealerCards = [];
-      cards.playerCards = [];
-      // $('#player').children().remove();
-      // $('#dealer').children().remove();
       console.log('Player Wins!!', playerScore);
-      // console.log('Dealer loose', dealerScore);
     } else if (dealerScore <= 21 && (playerScore > 21 || dealerScore > playerScore)) {
+      //player loses bet
       playerBankRoll -= parseInt(thePot);
-      // console.log('Dealer -> bet', bet);
-      // console.log('Dealer Win -> thePot', thePot);
-      // console.log('Dealer Win -> playerBankRoll', playerBankRoll);
-      thePot = 0;
-      bet = '';
-      roundPlayed++;
-      cards.dealerCards = [];
-      cards.playerCards = [];
-      // $('#player').children().remove();
-      // $('#dealer').children().remove();
       console.log('Dealer Wins!!', dealerScore);
-      // console.log('Player loose', playerScore);
-    } else if (playerScore === dealerScore) {
-      //it is a push
+    } else if (playerScore === dealerScore || (playerScore > 21 && dealerScore > 21)) {
+      //it is a push -- player keeps his bet
       playerBankRoll += parseInt(bet);
-      // console.log('Push -> bet', bet);
-      // console.log('Push Win -> thePot', thePot);
-      // console.log('Push playerBankRoll', playerBankRoll);
-      thePot = 0;
-      bet = '';
-      roundPlayed++;
-      cards.dealerCards = [];
-      cards.playerCards = [];
-      // $('#player').children().remove();
-      // $('#dealer').children().remove();
       console.log('Push!!');
-      // console.log('playerScore', playerScore);
-      // console.log('dealerScore', dealerScore);
     };
-
   };
 
   const gameCleanup = () => {
+    //reset for next round
+    thePot = 0;
+    bet = '';
+    roundPlayed++;
+    cards.dealerCards = [];
+    cards.playerCards = [];
+    // $('#player').children().remove();
+    // $('#dealer').children().remove();
+
     //check the cleanup.....
     console.log('playerBankRoll', playerBankRoll);
     console.log('roundPlayed', roundPlayed);
@@ -299,8 +264,13 @@ $(()=>{
     $('#hit-me').on('click', () => {
       console.log('hit-me clicked');
       //do all the hitme code
-      playerPlayHand();
+      if (scoreTotal(cards.playerCards) < 21) {
+        playerPlayHand();
+      } else {
+        $('#stay').trigger('click');
+      };
     });
+
     $('#stay').on('click', () => {
       console.log('stay clicked');
       //Player done... so hit-me and stay are done/off!!
