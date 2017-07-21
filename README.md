@@ -1,19 +1,19 @@
 Project 1 -- Blackjack MVP
 
   Setup - up generateComputer
-done    • Setup background - Green Playing table
+    • Setup background - Green Playing table
     • Show deck of cards on playing table
-done    • Set array of 52 card objects (suite, value)
-done    • Setup Player and Computer/Dealer objects
-done    • Random deal (pop or count = 52) form card array updating html  to display dealt cards
+    • Set array of 52 card objects (suite, value)
+    • Setup Player and Computer/Dealer objects
+    • Random deal (pop or count = 52) form card array updating html  to display dealt cards
   Player/Dealer(Computer)
-done    • bankroll -= bet on start (ante or end button)
-done    • update pot += ante or bet
-done    • 2 cards dealt to each player
-done    • calculate score for dealer/player
+    • bankroll -= bet on start (ante or end button)
+    • update pot += ante or bet
+    • 2 cards dealt to each player
+    • calculate score for dealer/player
       Player Hit (add score dealer/player)
-done          •Bet if bankroll >= 0 else EOG (bet/stay button)
-done          •player bet amount (bankroll -= bet)
+          •Bet if bankroll >= 0 else EOG (bet/stay button)
+          •player bet amount (bankroll -= bet)
           •dealer draws till >= 17
           •player takes another card
           •Player calc total > 21 busted EORound
