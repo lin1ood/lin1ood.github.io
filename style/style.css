@@ -12,7 +12,11 @@ body {
   /*background-color: white;*/
   margin-top: 20px;
   width: 100%;
-  box-sizing: border-box;
+  /*box-sizing: border-box;*/
+  text-align: center;
+  font-weight: bold;
+  font-size: 25px;
+  padding: 0;
 }
 
 img {
@@ -47,7 +51,7 @@ h1 {
   background-color: yellow;
   float: right;
   margin:auto;
-  margin-left: 325px;
+  /*margin-left: 325px;*/
 }
 
 #dealer {
@@ -56,5 +60,20 @@ h1 {
   text-align: center;
   background-color: blue;
   float: left;
-  margin-left: auto;
+  /*margin-left: 0;*/
+}
+
+#summary {
+  border: 1px solid black;
+  height: 200px;
+  width: 200px;
+  text-align: center;
+  background-color: lightgray;
+  float: right;
+  margin-right: 75px;
+
+}
+
+img {
+  margin-top: 25px;
 }
