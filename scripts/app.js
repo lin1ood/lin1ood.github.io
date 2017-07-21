@@ -160,7 +160,7 @@ $(()=>{
       } else {
         //set the bet for this round -- betting only once.
         //no 2:3 nor 5:7 yet....
-        playerBankRoll-=parseInt(bet);
+        // playerBankRoll-=parseInt(bet);
         thePot+=parseInt(bet);
         //input good play the game.........
         openingDeal();
@@ -206,15 +206,15 @@ $(()=>{
 
     if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
       //player gets the pot
-      playerBankRoll += parseInt(thePot);
+      playerBankRoll += parseInt(thePot) + parseInt(bet);
       console.log('Player Wins!!', playerScore);
     } else if (dealerScore <= 21 && (playerScore > 21 || dealerScore > playerScore)) {
       //player loses bet
-      playerBankRoll -= parseInt(thePot);
+      playerBankRoll -= parseInt(bet);
       console.log('Dealer Wins!!', dealerScore);
     } else if (playerScore === dealerScore || (playerScore > 21 && dealerScore > 21)) {
       //it is a push -- player keeps his bet
-      playerBankRoll += parseInt(bet);
+      //playerBankRoll += parseInt(bet);
       console.log('Push!!');
     };
   };
