@@ -131,7 +131,7 @@ $(()=>{
     });
     //get the input -- bet
     bet = $('input').val();
-    if (!parseInt(bet) || playerBankRoll < 0) {
+    if (!parseInt(bet) || playerBankRoll < 0 || bet > playerBankRoll) {
       // console.log('!parseInt(bet) || bet > playerBankRoll');
       $('input').attr("placeholder", "Invalid! Try Again").css({
         'background-color' : 'red',
@@ -156,14 +156,16 @@ $(()=>{
         //invalid input so wait for another input
         //and button click with a valid value - maybe
         //can't start the game so......
-        return;
+        return(false);
       } else {
         //set the bet for this round -- betting only once.
         //no 2:3 nor 5:7 yet....
-        thePot+=bet;
+        playerBankRoll-=parseInt(bet);
+        thePot+=parseInt(bet);
         //input good play the game.........
         openingDeal();
       };
+      return(true);
   };
 
   const playerPlayHand = () => {
@@ -181,14 +183,10 @@ $(()=>{
 
   const dealerPlayHand = () => {
     //JQuery to flip the hole card up.....
-    const faceUp = true;
-    // let holeCardImg = getCardImg(cards.dealerCards[1], faceUp);
-    // console.log('Turn over the hole card', cards.dealerCards[1][0].img);
-    // console.log("$('#dealer').eq(1)", $('#dealer').children().eq(1));
+    // const faceUp = true;
     $('#dealer').children().eq(1).attr({
         src: cards.dealerCards[1][0].img
     });
-
     //dealer draws until >= 17
     while ( scoreTotal(cards.dealerCards) <= 17 && cards.deck.length > 0) {
       // console.log('dealer draws another card');
@@ -253,12 +251,15 @@ $(()=>{
   // console.log('setup event listener on start/bet button');
 
   $('#bet').on('click', () => {
-    betButton();
+    const betBool = betButton();
     //Bet made -- turn button off for now -- till game finished or ended
-    $('#bet').off();
-    $('#bet').css('visibility', 'hidden');
-    $('#hit-me').css('visibility', 'visible');
-    $('#stay').css('visibility', 'visible');
+    console.log('betBool', betBool);
+    if (betBool) {
+      $('#bet').off();
+      $('#bet').css('visibility', 'hidden');
+      $('#hit-me').css('visibility', 'visible');
+      $('#stay').css('visibility', 'visible');
+    }
 
     //Players turn to hit or stand so.. turn on those buttons
     $('#hit-me').on('click', () => {
