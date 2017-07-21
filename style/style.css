@@ -52,6 +52,7 @@ h1 {
   float: right;
   margin:auto;
   /*margin-left: 325px;*/
+  /*display: flex;*/
 }
 
 #dealer {
@@ -61,19 +62,29 @@ h1 {
   background-color: blue;
   float: left;
   /*margin-left: 0;*/
+  /*display: flex;*/
 }
 
 #summary {
   border: 1px solid black;
-  height: 200px;
-  width: 200px;
-  text-align: center;
+  height: 300px;
+  width: 275px;
+  text-align:left;
   background-color: lightgray;
   float: right;
-  margin-right: 75px;
+  margin-right: 22px;
+  padding-left: 10px;
 
 }
 
 img {
   margin-top: 25px;
+}
+
+br {
+  display: block;
+  margin: 10px 0;
+  line-height: 20px;
+  content: " ";
+  font-size: 10px;
 }

@@ -185,7 +185,7 @@ $(()=>{
     //JQuery to flip the hole card up.....
     // const faceUp = true;
     console.log('$("#dealer").children()', $('#dealer').children());
-    $('#dealer').children().eq(1).attr({
+    $('#dealer').children().eq(3).attr({
         src: cards.dealerCards[1][0].img
     });
     //dealer draws until >= 17
@@ -217,6 +217,7 @@ $(()=>{
       //playerBankRoll += parseInt(bet);
       console.log('Push!!');
     };
+    roundPlayed++;
   };
 
   const gameCleanup = () => {
@@ -226,14 +227,22 @@ $(()=>{
     $('#stay').css('visibility', 'hidden');
     $('input').css('visibility', 'hidden');
 
+    $('#bank-roll').text('Player Bank Roll: $' + playerBankRoll);
+    $('#rounds').text('Rounds Played: ' + roundPlayed);
+    $('#pot').text('Pot: $' + thePot);
+    $('#playerbet').text('Players Bet: $' + parseInt(bet));
+    $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards));
+    $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards));
+
     //reset for next round
     thePot = 0;
     bet = '';
-    roundPlayed++;
     cards.dealerCards = [];
     cards.playerCards = [];
     // $('#player').children().remove();
     // $('#dealer').children().remove();
+
+
 
     //check the cleanup.....
     console.log('playerBankRoll', playerBankRoll);
