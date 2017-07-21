@@ -11,6 +11,8 @@ body {
   display: inline-block;
   /*background-color: white;*/
   margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 img {
@@ -26,6 +28,7 @@ img {
   text-align: center;
   border: 1px solid black;
   background-color: red;
+  box-sizing: border-box;
 }
 
 h1 {
@@ -41,7 +44,7 @@ h1 {
   height: 300px;
   width: 300px;
   text-align: center;
-  background-color: pink;
+  background-color: yellow;
   float: right;
   margin:auto;
   margin-left: 325px;
