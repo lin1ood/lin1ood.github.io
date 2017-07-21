@@ -144,7 +144,7 @@ $(()=>{
     return(true);
   };
 
-  const betButton = () => {
+  const validateBet = () => {
       //bet submitted (input) on click
       // console.log('bet =', bet);
 
@@ -184,26 +184,35 @@ $(()=>{
   const dealerPlayHand = () => {
     //JQuery to flip the hole card up.....
     // const faceUp = true;
-    console.log('$("#dealer").children()', $('#dealer').children());
+    console.log('dealerPlayHand 1');
     $('#dealer').children().eq(3).attr({
         src: cards.dealerCards[1][0].img
     });
     //dealer draws until >= 17
+    console.log('dealerPlayHand 2');
     while ( scoreTotal(cards.dealerCards) <= 17 && cards.deck.length > 0) {
-      // console.log('dealer draws another card');
+      console.log('dealer draws another card');
       hitMe($('#dealer'));
     };
+    //get the totals and do all the winner/looser/push updates
+    //prompt for continue playing.....
+    //I need a status or just on continue play show Game/Player Stats
+    console.log('dealerPlayHand 3');
+    whoWon();
+
+    console.log('dealerPlayHand 4');
+
+    //Game over at this point
+    //update stats and turn the input & bet button back on
+    summaryUdate();
     return;
   };
 
   const whoWon = () => {
     let playerScore = scoreTotal(cards.playerCards);
     let dealerScore = scoreTotal(cards.dealerCards);
-
-    console.log('playerScore', playerScore);
-    console.log('dealerScore', dealerScore);
-    // console.log('clean up');
-
+    // console.log('playerScore', playerScore);
+    // console.log('dealerScore', dealerScore);
     if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
       //player gets the pot
       playerBankRoll += parseInt(thePot) + parseInt(bet);
@@ -220,158 +229,103 @@ $(()=>{
     roundPlayed++;
   };
 
-  const gameCleanup = () => {
-    //remove things u can not use -- need not use
-    $('#bet').css('visibility', 'hidden');
-    $('#hit-me').css('visibility', 'hidden');
-    $('#stay').css('visibility', 'hidden');
-    $('input').css('visibility', 'hidden');
-
+  const summaryUdate = () => {
     $('#bank-roll').text('Player Bank Roll: $' + playerBankRoll);
     $('#rounds').text('Rounds Played: ' + roundPlayed);
     $('#pot').text('Pot: $' + thePot);
     $('#playerbet').text('Players Bet: $' + parseInt(bet));
     $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards));
     $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards));
+    $('#bet').css('visibility', 'visible');
+    $('input').css('visibility', 'visible');
+    $('input').text('');
+    $('#hit-me').css('visibility', 'hidden');
+    $('#stay').css('visibility', 'hidden');
+
+    //summary console.log
+    // console.log('playerBankRoll', playerBankRoll);
+    // console.log('roundPlayed', roundPlayed);
+    // console.log('cards.deck.length', cards.deck.length);
+    // console.log('cards.playerCards.length', cards.playerCards.length);
+    // console.log('cards.dealerCards.length', cards.dealerCards.length);
+    // console.log('thePot', thePot);
+    // console.log('bet' , bet);
+  };
+
+  const gameCleanup = () => {
+    //remove things u can not use -- need not use
+    // $('#bet').css('visibility', 'visible');
+    // $('input').css('visibility', 'visible');
+    // $('input').text('');
+    // $('#hit-me').css('visibility', 'hidden');
+    // $('#stay').css('visibility', 'hidden');
 
     //reset for next round
     thePot = 0;
-    bet = '';
+    bet = 0;
     cards.dealerCards = [];
     cards.playerCards = [];
-    // $('#player').children().remove();
-    // $('#dealer').children().remove();
-
-
-
-    //check the cleanup.....
-    console.log('playerBankRoll', playerBankRoll);
-    console.log('roundPlayed', roundPlayed);
-    console.log('cards.deck.length', cards.deck.length);
-    console.log('cards.playerCards.length', cards.playerCards.length);
-    console.log('cards.dealerCards.length', cards.dealerCards.length);
-    console.log('thePot', thePot);
-    console.log('bet' , bet);
-    // $('input').val("");
-    // bet = '';
-
+    console.log("$('#player img')", $('#player img'));
+    $('#player img').remove();
+    $('#dealer img').remove();
+    summaryUdate();
   };
+
+  const betButton = () => {
+    //todo: turn stuff back on and prepair for the next round!!!!!!!
+    gameCleanup();
+
+      const betBool = validateBet();
+      //Bet made -- turn button off for now -- till game finished or ended
+      // console.log('betBool', betBool);
+      if (betBool) {
+        // $('#bet').off();
+        $('input').css('visibility', 'hidden');
+        $('#bet').css('visibility', 'hidden');
+        $('#hit-me').css('visibility', 'visible');
+        $('#stay').css('visibility', 'visible');
+      }
+  };
+
+  const hitButton = () => {
+    console.log('hit-me clicked');
+    //do all the hitme code
+    playerPlayHand();
+    if (scoreTotal(cards.playerCards) > 21) {
+      $('#stay').trigger('click');
+    };
+  };
+
+  const stayButton = () => {
+    console.log('stay clicked');
+    //Player done... so hit-me and stay are done/off!!
+    // $('#hit-me').off();
+    // $('#stay').off();
+    $('#hit-me').css('visibility', 'hidden');
+    $('#stay').css('visibility', 'hidden');
+    //now the dealer play code runs (automatically - no buttons nor input)
+    dealerPlayHand();
+  };
+
+  //Start............
+  //build the Deck of Cards (just 1 Deck for now)
+  // console.log('createCards');
+  createCards();
+
   //hide non user flow buttons
   //don't show if it is not needed
   $('#hit-me').css('visibility', 'hidden');
   $('#stay').css('visibility', 'hidden');
 
-  //build the Deck of Cards (just 1 Deck for now)
-  // console.log('createCards');
-  createCards();
-  // console.log('setup event listener on start/bet button');
+  //set event listeners
+  $('#bet').on('click', betButton);
+  //Players turn to hit or stand so.. turn on those buttons
+  $('#hit-me').on('click', hitButton);
 
-  $('#bet').on('click', () => {
-    const betBool = betButton();
-    //Bet made -- turn button off for now -- till game finished or ended
-    console.log('betBool', betBool);
-    if (betBool) {
-      $('#bet').off();
-      $('#bet').css('visibility', 'hidden');
-      $('#hit-me').css('visibility', 'visible');
-      $('#stay').css('visibility', 'visible');
-    }
-
-    //Players turn to hit or stand so.. turn on those buttons
-    $('#hit-me').on('click', () => {
-      console.log('hit-me clicked');
-      //do all the hitme code
-      playerPlayHand();
-      if (scoreTotal(cards.playerCards) > 21) {
-      // } else {
-        $('#stay').trigger('click');
-      };
-    });
-
-    $('#stay').on('click', () => {
-      console.log('stay clicked');
-      //Player done... so hit-me and stay are done/off!!
-      $('#hit-me').off();
-      $('#stay').off();
-      //now the dealer play code runs (automatically - no buttons nor input)
-      dealerPlayHand();
-      //get the totals and do all the winner/looser/push updates
-      //prompt for continue playing.....
-      //I need a status or just on continue play show Game/Player Stats
-      whoWon();
-
-      gameCleanup();
-
-    });
-
-    console.log('outa the button click');
-  });
-
-    // while (!(bet) || bet > playerBankRoll) {
-    //   // alert("The bet is not a valid value. Try again.")
-    //   bet = betClicked();
-    // }
-
-    // // console.log('bet clicked');
-    // // alert("The bet is not a valid value. Try again.")
-    // //placeyourBet(bet)-- figure out how to loop on input
-    // // console.log('playerBankRoll', playerBankRoll);
-    // do {
-    //   bet = $('input').val();
-    //   console.log('bet', bet);
-    //   if ( !parseInt(bet) || bet > playerBankRoll) {
-    //     // alert("The bet is not a valid value. Enter a valid value here...");
-    //     // $('input').val("Invalid Value").css({
-    //       // 'background-color' : 'red',
-    //       // 'font-weight' : 'bold'
-    //     // });
-    //     bet = '';
-    //     console.log('returning false');
-    //     return (false);
-    //   };
-    // } while ( !parseInt(bet) || bet > playerBankRoll );
-    // return(true);
-    // // $('input').val('$' + bet + '.00').css({'background-color' : 'none'});
-    // //
-    // // bet = $('input').val();
-    // // if
-    // // $(e.currentTarget).parent().css('display', 'none');
-    // // console.log('Hello ', name);
-    // placeyourBet(bet);
-    // // // roundPlayed++;
-    // // //Player draws till > 17  if dealer up card is < 6 or stay
-    // // // let hitme = false;
-    // let playerScore = scoreTotal(cards.playerCards);
-    // //player hit or stay......
-    // //algorithm for hit or stay
-    //
-    //
-    // let dealerScore = scoreTotal(cards.dealerCards);
-    // //dealer draws until >= 17
-    // while ( dealerScore < 17 ) {
-    //       console.log('dealer draws another card');
-    //       cards.dealerCards.push(dealCard());
-    //       dealerScore = scoreTotal(cards.dealerCards);
-    // };
-    // //if dealerh up card is < 6 player takes hit
-    // //JQuery to get dealer up card.....
-    //
-    //
-    // // //check cards
-    // for (let i = 0; i < cards.deck.length; i++) {
-    //   console.log(cards.deck[i]);
-    // }
-    // // console.log('cards.deck.length', cards.deck.length)
-    // // console.log('cards.playerCards', cards.playerCards.length);
-    // // console.log('FaceCard', cards.playerCards[0][0] instanceof FaceCard );
-    // // console.log('FaceCard', cards.playerCards[1][0] instanceof FaceCard );
-    // // console.log(cards.playerCards[0][0].value);
-    // // console.log(cards.playerCards[1][0].value);
-    // // console.log(cards.playerCards[0][0].face);
-    // // console.log(cards.playerCards[1][0].face);
-    // // console.log('cards.dealerCards', cards.dealerCards.length);
-    // // console.log(cards.dealerCards[0][0].value);
-    // // console.log(cards.dealerCards[1][0].value);
-    // //
+  $('#stay').on('click', stayButton);
+  // gameCleanup();
+  // if ( playerBankRoll <= 0 && cards.deck.length < 4 ) {
+  //   return;
+  // };
 
 });
