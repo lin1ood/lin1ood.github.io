@@ -26,18 +26,18 @@ Project 1 -- Blackjack MVP
       Stay
           •Dealer score > 17
           •Player > 18
-          •player > dealer <= 21 bankroll += pot
-          •compare dealer card total with player
+          •compare dealer card total with player award pot to winner
+          •player & dealer bust or === a push bet credited back to player
 
     Strech Goals
       •Annomate dealing of cards off the deck
-      •Play with 4 decks or continous cards
-      •Player has no $ must Stay! win/loose pot ?
+      •Play with 4 decks
+      •Player has no $ must Stay! loose pot ?
       •algorithm to implement betting strategy
-      •insurance - side bet 2:1 payout (dealer up card is an ace)
+      •insurance - side bet
+      •2:1 payout (dealer up card is an ace)
       •split play
       •Aces are 1 or 11 (11 for now
-      •
 
 
 https://ga-students.slack.com/files/kristyn/F6AA69GCS/mvps_that_we_discussed_for_project_1.js
