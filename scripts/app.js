@@ -144,136 +144,178 @@ $(()=>{
     return(true);
   };
 
+  const betButton = () => {
+      //bet submitted (input) on click
+      // console.log('bet =', bet);
+
+      //get Valid Bet the input
+      //if bankroll < 0 EOG
+      //player can bet their last $
+      if (!getValidBet() && playerBankRoll >= 0) {
+        console.log('return to try again later');
+        //invalid input so wait for another input
+        //and button click with a valid value - maybe
+        //can't start the game so......
+
+        //todo: alert -- if playerBankRoll <= 0
+        //go get more $$  OR just Game Over!!!!
+        return;
+      } else {
+        // //play a round
+        // roundPlayed++;
+        // //deduct player bet from playerBankRoll
+        // playerBankRoll-=bet;
+        //
+        //todo: this may not be the best place yet.....
+        //no 2:3 nor 5:7 yet....
+        thePot+=bet;
+
+        // console.log('playerBankRoll', playerBankRoll);
+
+        //input good play the game.........
+        //todo: Turn off #bet button and go play  -- play here for now
+        //todo: Turn it on again at the end of the round.....
+        openingDeal();
+
+      };
+  };
+
+  const playerPlayHand = () => {
+    //player hit or stay......
+    //algorithm for hit or stay
+    // //Player draws till > 17  if dealer up card is < 6 or stay
+    // // let hitme = false;
+    //player hit or stay......
+    //algorithm for hit or stay - for now.....
+    //if dealer up card is < 6 player takes hit
+  if ( cards.dealerCards[1].value < 6 ) {
+      while (scoreTotal(cards.playerCards) <= 17 && cards.deck.length > 0) {
+        hitMe($('#player'));
+      }
+    }
+    return;
+  };
+
+  const dealerPlayHand = () => {
+    //JQuery to flip the hole card up.....
+    const faceUp = true;
+    // let holeCardImg = getCardImg(cards.dealerCards[1], faceUp);
+    // console.log('Turn over the hole card', cards.dealerCards[1][0].img);
+    // console.log("$('#dealer').eq(1)", $('#dealer').children().eq(1));
+    $('#dealer').children().eq(1).attr({
+        src: cards.dealerCards[1][0].img
+    });
+
+    //dealer draws until >= 17
+    while ( scoreTotal(cards.dealerCards) <= 17 && cards.deck.length > 0) {
+      // console.log('dealer draws another card');
+      hitMe($('#dealer'));
+    };
+    return;
+  };
+
+  const whoWon = () => {
+    let playerScore = scoreTotal(cards.playerCards);
+    let dealerScore = scoreTotal(cards.dealerCards);
+
+    console.log('playerScore', playerScore);
+    console.log('dealerScore', dealerScore);
+    // console.log('clean up');
+
+    if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
+      playerBankRoll += parseInt(thePot);
+      // console.log('Player -> bet', bet);
+      // console.log('Player Win -> thePot', thePot);
+      // console.log('Player Win -> playerBankRoll', playerBankRoll);
+      thePot = 0;
+      bet = '';
+      roundPlayed++;
+      cards.dealerCards = [];
+      cards.playerCards = [];
+      // $('#player').children().remove();
+      // $('#dealer').children().remove();
+      console.log('Player Wins!!', playerScore);
+      // console.log('Dealer loose', dealerScore);
+    } else if (dealerScore <= 21 && (playerScore > 21 || dealerScore > playerScore)) {
+      playerBankRoll -= parseInt(thePot);
+      // console.log('Dealer -> bet', bet);
+      // console.log('Dealer Win -> thePot', thePot);
+      // console.log('Dealer Win -> playerBankRoll', playerBankRoll);
+      thePot = 0;
+      bet = '';
+      roundPlayed++;
+      cards.dealerCards = [];
+      cards.playerCards = [];
+      // $('#player').children().remove();
+      // $('#dealer').children().remove();
+      console.log('Dealer Wins!!', dealerScore);
+      // console.log('Player loose', playerScore);
+    } else if (playerScore === dealerScore) {
+      //it is a push
+      playerBankRoll += parseInt(bet);
+      // console.log('Push -> bet', bet);
+      // console.log('Push Win -> thePot', thePot);
+      // console.log('Push playerBankRoll', playerBankRoll);
+      thePot = 0;
+      bet = '';
+      roundPlayed++;
+      cards.dealerCards = [];
+      cards.playerCards = [];
+      // $('#player').children().remove();
+      // $('#dealer').children().remove();
+      console.log('Push!!');
+      // console.log('playerScore', playerScore);
+      // console.log('dealerScore', dealerScore);
+    };
+
+  };
+
+  const gameCleanup = () => {
+    //check the cleanup.....
+    console.log('playerBankRoll', playerBankRoll);
+    console.log('roundPlayed', roundPlayed);
+    console.log('cards.deck.length', cards.deck.length);
+    console.log('cards.playerCards.length', cards.playerCards.length);
+    console.log('cards.dealerCards.length', cards.dealerCards.length);
+    console.log('thePot', thePot);
+    console.log('bet' , bet);
+    // $('input').val("");
+    // bet = '';
+
+  };
+
   //build the Deck of Cards (just 1 Deck for now)
   // console.log('createCards');
   createCards();
   // console.log('setup event listener on start/bet button');
+
   $('#bet').on('click', () => {
-    //bet submitted (input) on click
-    // console.log('bet =', bet);
+    betButton();
+    //Bet made -- turn button off for now -- till game finished or ended
+    $('#bet').off();
+    //Players turn to hit or stand so.. turn on those buttons
+    $('#hit-me').on('click', () => {
+      //do all the hitme code
+      playerPlayHand();
+    });
+    $('#stay').on('click', () => {
+      //Player done... so hit-me and stay are done/off!!
+      $('#hit-me').off();
+      $('#stay').off();
+      //now the dealer play code runs (automatically - no buttons nor input)
+      dealerPlayHand();
+      //get the totals and do all the winner/looser/push updates
+      //prompt for continue playing.....
+      //I need a status or just on continue play show Game/Player Stats
+      whoWon();
 
-    //get Valid Bet the input
-    //if bankroll < 0 EOG
-    //player can bet their last $
-    if (!getValidBet() && playerBankRoll >= 0) {
-      console.log('return to try again later');
-      //invalid input so wait for another input
-      //and button click with a valid value - maybe
-      //can't start the game so......
+      gameCleanup();
 
-      //todo: alert -- if playerBankRoll <= 0
-      //go get more $$  OR just Game Over!!!!
-      return;
-    } else {
-      // //play a round
-      // roundPlayed++;
-      // //deduct player bet from playerBankRoll
-      // playerBankRoll-=bet;
-      //
-      //todo: this may not be the best place yet.....
-      //no 2:3 nor 5:7 yet....
-      thePot+=bet;
+    });
 
-      // console.log('playerBankRoll', playerBankRoll);
-
-      //input good play the game.........
-      //todo: Turn off #bet button and go play  -- play here for now
-      //todo: Turn it on again at the end of the round.....
-      openingDeal();
-      //player hit or stay......
-      //algorithm for hit or stay
-      // //Player draws till > 17  if dealer up card is < 6 or stay
-      // // let hitme = false;
-      //player hit or stay......
-      //algorithm for hit or stay - for now.....
-      //if dealer up card is < 6 player takes hit
-    if ( cards.dealerCards[1].value < 6 ) {
-        while (scoreTotal(cards.playerCards) <= 17 && cards.deck.length > 0) {
-          hitMe($('#player'));
-        }
-      }
-      let playerScore = scoreTotal(cards.playerCards);
-
-      //JQuery to flip the hole card up.....
-      const faceUp = true;
-      // let holeCardImg = getCardImg(cards.dealerCards[1], faceUp);
-      // console.log('Turn over the hole card', cards.dealerCards[1][0].img);
-      // console.log("$('#dealer').eq(1)", $('#dealer').children().eq(1));
-      $('#dealer').children().eq(1).attr({
-          src: cards.dealerCards[1][0].img
-      });
-
-      //dealer draws until >= 17
-      while ( scoreTotal(cards.dealerCards) <= 17 && cards.deck.length > 0) {
-        // console.log('dealer draws another card');
-        hitMe($('#dealer'));
-      };
-      let dealerScore = scoreTotal(cards.dealerCards);
-
-
-      console.log('playerScore', playerScore);
-      console.log('dealerScore', dealerScore);
-      // console.log('clean up');
-
-      if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
-        playerBankRoll += parseInt(thePot);
-        // console.log('Player -> bet', bet);
-        // console.log('Player Win -> thePot', thePot);
-        // console.log('Player Win -> playerBankRoll', playerBankRoll);
-        thePot = 0;
-        bet = '';
-        roundPlayed++;
-        cards.dealerCards = [];
-        cards.playerCards = [];
-        // $('#player').children().remove();
-        // $('#dealer').children().remove();
-        console.log('Player Wins!!', playerScore);
-        // console.log('Dealer loose', dealerScore);
-      } else if (dealerScore <= 21 && (playerScore > 21 || dealerScore > playerScore)) {
-        playerBankRoll -= parseInt(thePot);
-        // console.log('Dealer -> bet', bet);
-        // console.log('Dealer Win -> thePot', thePot);
-        // console.log('Dealer Win -> playerBankRoll', playerBankRoll);
-        thePot = 0;
-        bet = '';
-        roundPlayed++;
-        cards.dealerCards = [];
-        cards.playerCards = [];
-        // $('#player').children().remove();
-        // $('#dealer').children().remove();
-        console.log('Dealer Wins!!', dealerScore);
-        // console.log('Player loose', playerScore);
-      } else if (playerScore === dealerScore) {
-        //it is a push
-        playerBankRoll += parseInt(bet);
-        // console.log('Push -> bet', bet);
-        // console.log('Push Win -> thePot', thePot);
-        // console.log('Push playerBankRoll', playerBankRoll);
-        thePot = 0;
-        bet = '';
-        roundPlayed++;
-        cards.dealerCards = [];
-        cards.playerCards = [];
-        // $('#player').children().remove();
-        // $('#dealer').children().remove();
-        console.log('Push!!');
-        // console.log('playerScore', playerScore);
-        // console.log('dealerScore', dealerScore);
-      };
-      //check the cleanup.....
-      console.log('playerBankRoll', playerBankRoll);
-      console.log('roundPlayed', roundPlayed);
-      console.log('cards.deck.length', cards.deck.length);
-      console.log('cards.playerCards.length', cards.playerCards.length);
-      console.log('cards.dealerCards.length', cards.dealerCards.length);
-      console.log('thePot', thePot);
-      console.log('bet' , bet);
-      // $('input').val("");
-      // bet = '';
-    };
+    console.log('outa the button click');
   });
 
-  console.log('outa the button click');
     // while (!(bet) || bet > playerBankRoll) {
     //   // alert("The bet is not a valid value. Try again.")
     //   bet = betClicked();
