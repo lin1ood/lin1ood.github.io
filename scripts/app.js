@@ -272,7 +272,7 @@ $(()=>{
     if (cards.deck.length < 4) {
       alert("The Deck is exhausted.  Restarting...");
       location.reload();
-    } else if ( playerBankRoll < 0 ) {
+    } else if ( playerBankRoll <= 0 ) {
       alert("Players Bankroll is exhausted.  Restarting...");
       location.reload();
     }
