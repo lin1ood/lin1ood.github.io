@@ -58,7 +58,7 @@ $(()=>{
   };
 
   const getCardImg = (playingCard, faceUp) => {
-    console.log('playingCard[0].img', playingCard[0].img);
+    // console.log('playingCard[0].img', playingCard[0].img);
     let cardPic = playingCard[0].img;
     if (!faceUp) {
       cardPic = 'img/back.bmp'
@@ -98,23 +98,25 @@ $(()=>{
     cardInPlay = dealCard();
     $('#dealer').append(getCardImg(cardInPlay, !faceUp));
     cards.dealerCards.push(cardInPlay);
-    console.log('The Hole Card:', cardInPlay)
+    // console.log('The Hole Card:', cardInPlay)
   };
 
   const hitMe = ($element) => {
     const faceUp = true;
     let cardInPlay = dealCard();
-    // console.log('cardInPlay', cardInPlay);
     $element.append(getCardImg(cardInPlay, faceUp));
-    cards.playerCards.push(cardInPlay);
+    if ($element.attr('id') === 'player') {
+      cards.playerCards.push(cardInPlay);
+    } else {
+      cards.dealerCards.push(cardInPlay);
+    };
   };
 
   const scoreTotal = (hand) => {
       let totalScore = 0;
       // console.log('hand.length', hand.length);
       for ( let i = 0; i < hand.length; i++ ) {
-        console.log('hand['+ i + '] [0].value', hand[i][0].value);
-        // console.log('hand[' + i + '][0].value', hand[i][0].value);
+        // console.log('hand['+ i + '] [0].value', hand[i][0].value);
         totalScore+=hand[i][0].value;
       }
       return(totalScore);
@@ -182,7 +184,6 @@ $(()=>{
       //algorithm for hit or stay
       // //Player draws till > 17  if dealer up card is < 6 or stay
       // // let hitme = false;
-      let playerScore = scoreTotal(cards.playerCards);
       //player hit or stay......
       //algorithm for hit or stay - for now.....
       //if dealer up card is < 6 player takes hit
@@ -191,34 +192,34 @@ $(()=>{
           hitMe($('#player'));
         }
       }
+      let playerScore = scoreTotal(cards.playerCards);
 
       //JQuery to flip the hole card up.....
       const faceUp = true;
       // let holeCardImg = getCardImg(cards.dealerCards[1], faceUp);
-      console.log('Turn over the hole card', cards.dealerCards[1][0].img);
-      console.log("$('#dealer').eq(1)", $('#dealer').children().eq(1));
+      // console.log('Turn over the hole card', cards.dealerCards[1][0].img);
+      // console.log("$('#dealer').eq(1)", $('#dealer').children().eq(1));
       $('#dealer').children().eq(1).attr({
           src: cards.dealerCards[1][0].img
       });
 
-
-      let dealerScore = scoreTotal(cards.dealerCards);
       //dealer draws until >= 17
-      // while ( scoreTotal(cards.dealerCards) < 17 && cards.deck.length > 0) {
-      //   console.log('dealer draws another card');
-      //   hitMe($('#dealer'));
-      // };
+      while ( scoreTotal(cards.dealerCards) <= 17 && cards.deck.length > 0) {
+        // console.log('dealer draws another card');
+        hitMe($('#dealer'));
+      };
+      let dealerScore = scoreTotal(cards.dealerCards);
 
 
       console.log('playerScore', playerScore);
       console.log('dealerScore', dealerScore);
-      console.log('clean up');
+      // console.log('clean up');
 
-      if (playerScore <= 21 && playerScore > dealerScore) {
-        playerBankRoll += thePot;
-        console.log('Player -> bet', bet);
-        console.log('Player Win -> thePot', thePot);
-        console.log('Player Win -> playerBankRoll', playerBankRoll);
+      if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
+        playerBankRoll += parseInt(thePot);
+        // console.log('Player -> bet', bet);
+        // console.log('Player Win -> thePot', thePot);
+        // console.log('Player Win -> playerBankRoll', playerBankRoll);
         thePot = 0;
         bet = '';
         roundPlayed++;
@@ -227,13 +228,12 @@ $(()=>{
         // $('#player').children().remove();
         // $('#dealer').children().remove();
         console.log('Player Wins!!', playerScore);
-        console.log('Dealer loose', dealerScore);
-
-      } else if (dealerScore <= 21 && dealerScore > playerScore) {
-        playerBankRoll -= thePot;
-        console.log('Dealer -> bet', bet);
-        console.log('Dealer Win -> thePot', thePot);
-        console.log('Dealer Win -> playerBankRoll', playerBankRoll);
+        // console.log('Dealer loose', dealerScore);
+      } else if (dealerScore <= 21 && (playerScore > 21 || dealerScore > playerScore)) {
+        playerBankRoll -= parseInt(thePot);
+        // console.log('Dealer -> bet', bet);
+        // console.log('Dealer Win -> thePot', thePot);
+        // console.log('Dealer Win -> playerBankRoll', playerBankRoll);
         thePot = 0;
         bet = '';
         roundPlayed++;
@@ -242,13 +242,13 @@ $(()=>{
         // $('#player').children().remove();
         // $('#dealer').children().remove();
         console.log('Dealer Wins!!', dealerScore);
-        console.log('Player loose', playerScore);
+        // console.log('Player loose', playerScore);
       } else if (playerScore === dealerScore) {
         //it is a push
-        playerBankRoll += bet;
-        console.log('Push -> bet', bet);
-        console.log('Push Win -> thePot', thePot);
-        console.log('Push playerBankRoll', playerBankRoll);
+        playerBankRoll += parseInt(bet);
+        // console.log('Push -> bet', bet);
+        // console.log('Push Win -> thePot', thePot);
+        // console.log('Push playerBankRoll', playerBankRoll);
         thePot = 0;
         bet = '';
         roundPlayed++;
@@ -257,8 +257,8 @@ $(()=>{
         // $('#player').children().remove();
         // $('#dealer').children().remove();
         console.log('Push!!');
-        console.log('playerScore', playerScore);
-        console.log('dealerScore', dealerScore);
+        // console.log('playerScore', playerScore);
+        // console.log('dealerScore', dealerScore);
       };
       //check the cleanup.....
       console.log('playerBankRoll', playerBankRoll);

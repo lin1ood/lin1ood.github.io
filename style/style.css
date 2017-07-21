@@ -1,5 +1,5 @@
 body {
-  border: 1px solid purple;
+  /*border: 1px solid purple;*/
   background-color: green;
 }
 
@@ -9,7 +9,7 @@ body {
 
 .players {
   display: inline-block;
-  background-color: white;
+  /*background-color: white;*/
   margin-top: 20px;
 }
 
