@@ -184,6 +184,7 @@ $(()=>{
   const dealerPlayHand = () => {
     //JQuery to flip the hole card up.....
     // const faceUp = true;
+    console.log('$("#dealer").children()', $('#dealer').children());
     $('#dealer').children().eq(1).attr({
         src: cards.dealerCards[1][0].img
     });
@@ -219,6 +220,12 @@ $(()=>{
   };
 
   const gameCleanup = () => {
+    //remove things u can not use -- need not use
+    $('#bet').css('visibility', 'hidden');
+    $('#hit-me').css('visibility', 'hidden');
+    $('#stay').css('visibility', 'hidden');
+    $('input').css('visibility', 'hidden');
+
     //reset for next round
     thePot = 0;
     bet = '';
