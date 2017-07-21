@@ -188,11 +188,13 @@ $(()=>{
     //player hit or stay......
     //algorithm for hit or stay - for now.....
     //if dealer up card is < 6 player takes hit
-  if ( cards.dealerCards[1].value < 6 ) {
-      while (scoreTotal(cards.playerCards) <= 17 && cards.deck.length > 0) {
+    console.log('playerPlayHand Entry');
+    console.log('cards.dealerCards[1][0].value', cards.dealerCards[1][0].value);
+  // if ( cards.dealerCards[1][0].value < 6 ) {
+      // while (scoreTotal(cards.playerCards) <= 17 && cards.deck.length > 0) {
         hitMe($('#player'));
-      }
-    }
+      // };
+    // };
     return;
   };
 
@@ -295,10 +297,12 @@ $(()=>{
     $('#bet').off();
     //Players turn to hit or stand so.. turn on those buttons
     $('#hit-me').on('click', () => {
+      console.log('hit-me clicked');
       //do all the hitme code
       playerPlayHand();
     });
     $('#stay').on('click', () => {
+      console.log('stay clicked');
       //Player done... so hit-me and stay are done/off!!
       $('#hit-me').off();
       $('#stay').off();
