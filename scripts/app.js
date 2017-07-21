@@ -269,6 +269,13 @@ $(()=>{
     $('#player img').remove();
     $('#dealer img').remove();
     summaryUdate();
+    if (cards.deck.length < 4) {
+      alert("The Deck is exhausted.  Restarting...");
+      location.reload();
+    } else if ( playerBankRoll < 0 ) {
+      alert("Players Bankroll is exhausted.  Restarting...");
+      location.reload();
+    }
   };
 
   const betButton = () => {
