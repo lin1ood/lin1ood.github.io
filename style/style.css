@@ -35,6 +35,10 @@ img {
   box-sizing: border-box;
 }
 
+#deck img {
+  margin-top: 25px;
+}
+
 h1 {
     text-align: center;
     font-size: 3em;
@@ -79,6 +83,10 @@ h1 {
 
 img {
   margin-top: 25px;
+  animation-name: card;
+  animation-duration: 1s;
+  transition-timing-function: ease-out;
+  margin: 2px;
 }
 
 br {
@@ -87,4 +95,9 @@ br {
   line-height: 20px;
   content: " ";
   font-size: 10px;
+}
+
+@keyframes card {
+  0% {transform: rotate(1440deg) scale(0)};
+  100% {transform: rotate(0 deg) scale(1)};
 }
