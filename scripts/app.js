@@ -1,6 +1,7 @@
 $(()=>{
 // console.log('hooked up');
-
+  //globals -- maintained between rounds
+  //and initialized here for starting a new game
   let playerBankRoll = 500;
   let thePot = 0;
   let bet = '';
@@ -8,6 +9,7 @@ $(()=>{
   let playerWins = true;
   let dealerWins = true;
 
+  //class for playing card
   class Card {
     constructor(suit, value, img) {
       this.suit = suit;
@@ -16,6 +18,7 @@ $(()=>{
     }
   };
 
+  //Class for Face Cards
   class FaceCard extends Card {
     constructor(suit, value, img, face) {
       super(suit, value, img);
@@ -23,6 +26,8 @@ $(()=>{
     }
   }
 
+  //cards object for storing the 'in play' deck,
+  //dealer & player hands
   const cards = {
     deck: [],
     dealerCards: [],
@@ -30,7 +35,7 @@ $(()=>{
   };
 
 
-  //set cards in a deck
+  //create 1 52 card deck of all 4 suits cards in a deck
   const createCards = () => {
     const suit = ['Hearts', 'Diamonds', 'Spades', 'Clubs'];
 
@@ -47,6 +52,7 @@ $(()=>{
     }
   };
 
+  //randomly deal cards from the deck.cards array
   const dealCard = () => {
     if (cards.deck.length > 0) {
       const randomIndex = Math.floor((Math.random() * (cards.deck.length)));
@@ -59,16 +65,16 @@ $(()=>{
     }
   };
 
+
+  //create and return face up/face down card image element
+  //based on the playingCard parameter
   const getCardImg = (playingCard, faceUp) => {
-    // console.log('playingCard[0].img', playingCard[0].img);
     let cardPic = playingCard[0].img;
     if (!faceUp) {
       cardPic = 'img/back.bmp'
     };
 
-    //create a card image to append to the player/dealer div.
     const $cardImage = $('<img/>');
-
     $cardImage.attr({
         src: cardPic,
         height: "125px",
@@ -77,12 +83,10 @@ $(()=>{
     return($cardImage);
   };
 
+  //Opening deal -- 2 cards to the player and 2 to the dealer in turn
+  //Dealers second delt card is the hole card and only the back can show
   const openingDeal = () => {
-    // console.log('cards.deck.length', cards.deck.length);
     const faceUp = true;
-    //test for dealCard return of null... nomore cards and EOG
-    //if cards.deck.length < 4 --> EOG.
-    //
     //face up
     let cardInPlay = dealCard();
     // console.log('cardInPlay', cardInPlay);
@@ -100,9 +104,9 @@ $(()=>{
     cardInPlay = dealCard();
     $('#dealer').append(getCardImg(cardInPlay, !faceUp));
     cards.dealerCards.push(cardInPlay);
-    // console.log('The Hole Card:', cardInPlay)
   };
 
+  //hitme player or dealer to add a card to their hand
   const hitMe = ($element) => {
     const faceUp = true;
     let cardInPlay = dealCard();
@@ -114,6 +118,7 @@ $(()=>{
     };
   };
 
+  //calc the score total of the hand (cards) parameter
   const scoreTotal = (hand) => {
       let totalScore = 0;
       // console.log('hand.length', hand.length);
@@ -124,6 +129,7 @@ $(()=>{
       return(totalScore);
   };
 
+  //check the input for a good, valid value
   const getValidBet = () => {
     console.log('betClicked');
     //clean up the input box form last time
@@ -134,23 +140,18 @@ $(()=>{
     //get the input -- bet
     bet = $('input').val();
     if (!parseInt(bet) || playerBankRoll < 0 || bet > playerBankRoll) {
-      // console.log('!parseInt(bet) || bet > playerBankRoll');
+      // nag in red if input was invalid
       $('input').attr("placeholder", "Invalid! Try Again").css({
         'background-color' : 'red',
         'font-weight' : 'bold'
       });
       return(false);
     }
-    //input is a non-blocking call so just leave!!!
-    //and wait for the next button to check again.....
     return(true);
   };
 
+  //get Valid Bet the input
   const validateBet = () => {
-      //bet submitted (input) on click
-      // console.log('bet =', bet);
-
-      //get Valid Bet the input
       //if bankroll < 0 EOG
       //player can bet their last $
       if (!getValidBet() && playerBankRoll >= 0) {
@@ -161,31 +162,34 @@ $(()=>{
         return(false);
       } else {
         //set the bet for this round -- betting only once.
-        //no 2:3 nor 5:7 yet....
-        // playerBankRoll-=parseInt(bet);
+        //todo: Strech
+        //  no 2:3 nor 5:7 yet....
         thePot+=parseInt(bet);
-        //input good play the game.........
         openingDeal();
       };
       return(true);
   };
 
+  //player playing hand
+  //This method is avaiable for self play
+  //could let the game run in a 'Demo' mode.
   const playerPlayHand = () => {
     //player hit or stay......
+    //todo: Strech Goal
     //algorithm for hit or stay
-    // //Player draws till > 17  if dealer up card is < 6 or stay
-    // // let hitme = false;
-    //player hit or stay......
-    //algorithm for hit or stay - for now.....
-    //if dealer up card is < 6 player takes hit
-    // console.log('playerPlayHand Entry');
+    // Current implementation... this was coded inline for console.log prior to // the hit button baing added.. with this it is up to the Player
+    //  Player draws till > 17  if dealer up card is < 6 or stay
+    //  let hitme = false;
     hitMe($('#player'));
     return;
   };
 
+  //Player is done with hits and has stayed
+  //now the Dealer (Computer) must play her hand
   const dealerPlayHand = () => {
     //JQuery to flip the hole card up.....
-    // const faceUp = true;
+    //replace the back of the card with the actual
+    //face of the card
     $('#dealer').children().eq(3).attr({
         src: cards.dealerCards[1][0].img
     });
@@ -204,13 +208,14 @@ $(()=>{
     return;
   };
 
+  //who won the round
   const whoWon = () => {
     let playerScore = scoreTotal(cards.playerCards);
     let dealerScore = scoreTotal(cards.dealerCards);
     // console.log('playerScore', playerScore);
     // console.log('dealerScore', dealerScore);
     if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
-      //player gets the pot
+      //player gets the pot & original bet back
       playerBankRoll += parseInt(thePot) + parseInt(bet);
       playerWins = true;
       dealerWins = false;
@@ -228,27 +233,32 @@ $(()=>{
       dealerWins = true;
       console.log('Push!!');
     };
+    //this is the end of the round -- when the dealer is done.
     roundPlayed++;
   };
 
+  //calc and update the summary div (panel)
   const summaryUdate = () => {
     $('#bank-roll').text('Player Bank Roll: $' + playerBankRoll);
     $('#rounds').text('Rounds Played: ' + roundPlayed);
     $('#pot').text('Pot: $' + thePot);
     $('#playerbet').text('Players Bet: $' + parseInt(bet));
+    //set green 'win' or red 'lose' summary text for the Player
     if (playerWins) {
       $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards)).css('color', 'green');
     } else {
       $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards)).css('color', 'red');
     }
+    //set green 'win' or red 'lose' summary text for the Dealer
     if (dealerWins) {
       $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards)).css('color', 'green');
     } else {
       $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards)).css('color', 'red');
     }
+    //end of round so make the bet/start visible again
     $('#bet').css('visibility', 'visible');
     $('input').css('visibility', 'visible');
-    $('input').text('');
+    // $('input').attr('placeholder', "Place your Bet Here");
     //no more need for hit-me nor stay -- game over
     $('#hit-me').css('visibility', 'hidden');
     $('#stay').css('visibility', 'hidden');
@@ -263,24 +273,20 @@ $(()=>{
     // console.log('bet' , bet);
   };
 
+  //reset cumulative values for next round
   const gameCleanup = () => {
-    //remove things u can not use -- need not use
-    // $('#bet').css('visibility', 'visible');
-    // $('input').css('visibility', 'visible');
-    // $('input').text('');
-    // $('#hit-me').css('visibility', 'hidden');
-    // $('#stay').css('visibility', 'hidden');
-
-    //reset for next round
-    thePot = 0;
-    bet = 0;
-    cards.dealerCards = [];
-    cards.playerCards = [];
-    // console.log("$('#player img')", $('#player img'));
-    $('#player img').remove();
-    $('#dealer img').remove();
+    //global value housekeeping
     playerWins = true;
     dealerWins = true;
+    thePot = 0;
+    bet = 0;
+    //empty hands for both players
+    cards.dealerCards = [];
+    cards.playerCards = [];
+    //remove cards from the table
+    $('#player img').remove();
+    $('#dealer img').remove();
+    //set summary panel with top of the round values
     summaryUdate();
     if (cards.deck.length < 4) {
       alert("The Deck is exhausted.  Restarting...");
@@ -293,14 +299,13 @@ $(()=>{
 
   const betButton = () => {
     console.log('Start/bet clicked');
-    //todo: turn stuff back on and prepair for the next round!!!!!!!
+    //reset cumulative vars for new round
     gameCleanup();
 
+    //player has placed a bet
     const betBool = validateBet();
-    //Bet made -- turn button off for now -- till game finished or ended
-    // console.log('betBool', betBool);
+    //hide bet button for now -- till game finished or next round
     if (betBool) {
-      // $('#bet').off();
       $('input').css('visibility', 'hidden');
       $('#bet').css('visibility', 'hidden');
       $('#hit-me').css('visibility', 'visible');
@@ -308,9 +313,9 @@ $(()=>{
     }
   };
 
+  //player asking for another card
   const hitButton = () => {
     console.log('hit-me clicked');
-    //do all the hitme code
     playerPlayHand();
     if (scoreTotal(cards.playerCards) > 21 || cards.deck.length <= 0) {
       $('#stay').trigger('click');
@@ -319,18 +324,16 @@ $(()=>{
 
   const stayButton = () => {
     console.log('stay clicked');
-    //Player done... so hit-me and stay are done/off!!
-    // $('#hit-me').off();
-    // $('#stay').off();
+    //Player done... so hide hit-me - no need to show what is not needed
     $('#hit-me').css('visibility', 'hidden');
     $('#stay').css('visibility', 'hidden');
     //now the dealer play code runs (automatically - no buttons nor input)
+    //dealer must hit until >= 17
     dealerPlayHand();
   };
 
   //Start............
-  //build the Deck of Cards (just 1 Deck for now)
-  // console.log('createCards');
+  //build the Deck of Cards (just 1 Deck for now - each call will create 1 deck)
   createCards();
 
   //hide non user flow buttons
@@ -338,15 +341,11 @@ $(()=>{
   $('#hit-me').css('visibility', 'hidden');
   $('#stay').css('visibility', 'hidden');
 
-  //set event listeners
+  //set 3 button event listeners
   $('#bet').on('click', betButton);
   //Players turn to hit or stand so.. turn on those buttons
   $('#hit-me').on('click', hitButton);
-
+  //player stay - happy with hand
   $('#stay').on('click', stayButton);
-  // gameCleanup();
-  // if ( playerBankRoll <= 0 && cards.deck.length < 4 ) {
-  //   return;
-  // };
 
 });
