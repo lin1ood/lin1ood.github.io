@@ -101,3 +101,15 @@ br {
   0% {transform: rotate(1440deg) scale(0)};
   100% {transform: rotate(0 deg) scale(1)};
 }
+
+input {
+  height: 30px;
+  text-align: center;
+}
+
+button {
+  height: 30px;
+  width: auto;
+  border-radius: 25px;
+
+}
