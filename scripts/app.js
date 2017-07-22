@@ -5,6 +5,8 @@ $(()=>{
   let thePot = 0;
   let bet = '';
   let roundPlayed = 0;
+  let playerWins = true;
+  let dealerWins = true;
 
   class Card {
     constructor(suit, value, img) {
@@ -184,24 +186,18 @@ $(()=>{
   const dealerPlayHand = () => {
     //JQuery to flip the hole card up.....
     // const faceUp = true;
-    console.log('dealerPlayHand 1');
     $('#dealer').children().eq(3).attr({
         src: cards.dealerCards[1][0].img
     });
     //dealer draws until >= 17
-    console.log('dealerPlayHand 2');
     while ( scoreTotal(cards.dealerCards) <= 17 && cards.deck.length > 0) {
-      console.log('dealer draws another card');
+      // console.log('dealer draws another card');
       hitMe($('#dealer'));
     };
     //get the totals and do all the winner/looser/push updates
     //prompt for continue playing.....
     //I need a status or just on continue play show Game/Player Stats
-    console.log('dealerPlayHand 3');
     whoWon();
-
-    console.log('dealerPlayHand 4');
-
     //Game over at this point
     //update stats and turn the input & bet button back on
     summaryUdate();
@@ -216,14 +212,20 @@ $(()=>{
     if (playerScore <= 21 && (dealerScore > 21 || playerScore > dealerScore)) {
       //player gets the pot
       playerBankRoll += parseInt(thePot) + parseInt(bet);
+      playerWins = true;
+      dealerWins = false;
       console.log('Player Wins!!', playerScore);
     } else if (dealerScore <= 21 && (playerScore > 21 || dealerScore > playerScore)) {
       //player loses bet
       playerBankRoll -= parseInt(bet);
+      dealerWins = true;
+      playerWins = false;
       console.log('Dealer Wins!!', dealerScore);
     } else if (playerScore === dealerScore || (playerScore > 21 && dealerScore > 21)) {
       //it is a push -- player keeps his bet
       //playerBankRoll += parseInt(bet);
+      playerWins = true;
+      dealerWins = true;
       console.log('Push!!');
     };
     roundPlayed++;
@@ -234,11 +236,20 @@ $(()=>{
     $('#rounds').text('Rounds Played: ' + roundPlayed);
     $('#pot').text('Pot: $' + thePot);
     $('#playerbet').text('Players Bet: $' + parseInt(bet));
-    $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards));
-    $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards));
+    if (playerWins) {
+      $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards)).css('color', 'green');
+    } else {
+      $('#player-score').text('Player Score: ' + scoreTotal(cards.playerCards)).css('color', 'red');
+    }
+    if (dealerWins) {
+      $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards)).css('color', 'green');
+    } else {
+      $('#dealer-score').text('Dealer Score: ' + scoreTotal(cards.dealerCards)).css('color', 'red');
+    }
     $('#bet').css('visibility', 'visible');
     $('input').css('visibility', 'visible');
     $('input').text('');
+    //no more need for hit-me nor stay -- game over
     $('#hit-me').css('visibility', 'hidden');
     $('#stay').css('visibility', 'hidden');
 
@@ -265,9 +276,11 @@ $(()=>{
     bet = 0;
     cards.dealerCards = [];
     cards.playerCards = [];
-    console.log("$('#player img')", $('#player img'));
+    // console.log("$('#player img')", $('#player img'));
     $('#player img').remove();
     $('#dealer img').remove();
+    // $('#player-score').css('color', 'black');
+    // $('#dealer-score').css('color', 'black');
     summaryUdate();
     if (cards.deck.length < 4) {
       alert("The Deck is exhausted.  Restarting...");
@@ -279,19 +292,20 @@ $(()=>{
   };
 
   const betButton = () => {
+    console.log('Start/bet clicked');
     //todo: turn stuff back on and prepair for the next round!!!!!!!
     gameCleanup();
 
-      const betBool = validateBet();
-      //Bet made -- turn button off for now -- till game finished or ended
-      // console.log('betBool', betBool);
-      if (betBool) {
-        // $('#bet').off();
-        $('input').css('visibility', 'hidden');
-        $('#bet').css('visibility', 'hidden');
-        $('#hit-me').css('visibility', 'visible');
-        $('#stay').css('visibility', 'visible');
-      }
+    const betBool = validateBet();
+    //Bet made -- turn button off for now -- till game finished or ended
+    // console.log('betBool', betBool);
+    if (betBool) {
+      // $('#bet').off();
+      $('input').css('visibility', 'hidden');
+      $('#bet').css('visibility', 'hidden');
+      $('#hit-me').css('visibility', 'visible');
+      $('#stay').css('visibility', 'visible');
+    }
   };
 
   const hitButton = () => {
