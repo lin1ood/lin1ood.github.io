@@ -279,8 +279,8 @@ $(()=>{
     // console.log("$('#player img')", $('#player img'));
     $('#player img').remove();
     $('#dealer img').remove();
-    // $('#player-score').css('color', 'black');
-    // $('#dealer-score').css('color', 'black');
+    playerWins = true;
+    dealerWins = true;
     summaryUdate();
     if (cards.deck.length < 4) {
       alert("The Deck is exhausted.  Restarting...");
@@ -312,7 +312,7 @@ $(()=>{
     console.log('hit-me clicked');
     //do all the hitme code
     playerPlayHand();
-    if (scoreTotal(cards.playerCards) > 21) {
+    if (scoreTotal(cards.playerCards) > 21 || cards.deck.length <= 0) {
       $('#stay').trigger('click');
     };
   };
