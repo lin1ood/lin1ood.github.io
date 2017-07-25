@@ -11,7 +11,7 @@
     * update pot += ante or bet
     * 2 cards dealt to each player
     * calculate score for dealer/player
-  ### Player Hit (add score dealer/player)
+### Player Hit (add score dealer/player)
           * Bet if bankroll >= 0 else EOG (bet/stay button)
           * player bet amount (bankroll -= bet)
           * dealer draws till >= 17
@@ -23,7 +23,7 @@
             ..* Player wins pot bankroll += (pot * 2)
           * Dealer/Computer pays winner
             ..* While dealer or player !busted or !stay
-    ### Stay
+### Stay
           * Dealer score > 17
           * Player > 18
           * compare dealer card total with player award pot to winner
@@ -39,8 +39,8 @@
       * split play
       * Aces are 1 or 11 (11 for now
 
-# Site:
+## Site:
 https://lin1ood.github.io/
 
-# Code:
+## Code:
 https://github.com/lin1ood/lin1ood.github.io
