@@ -1,12 +1,12 @@
-Project 1 -- Blackjack MVP
+# H1 Project 1 -- Blackjack MVP
 
-  Setup - up generateComputer
+  Setup - up generateComputer -- Class - Objects - JavaScript
     • Setup background - Green Playing table
     • Show deck of cards on playing table
-    • Set array of 52 card objects (suite, value)
+    • Set array of 52 card objects (suit, value)
     • Setup Player and Computer/Dealer objects
     • Random deal (pop or count = 52) form card array updating html  to display dealt cards
-  Player/Dealer(Computer)
+  Player/Dealer(Computer) -- CSS -- JQuery -- JavaScript
     • bankroll -= bet on start (ante or end button)
     • update pot += ante or bet
     • 2 cards dealt to each player
@@ -30,8 +30,8 @@ Project 1 -- Blackjack MVP
           •player & dealer bust or === a push bet credited back to player
 
     Strech Goals
-      •Annomate dealing of cards off the deck
-      •Play with 4 decks
+      •Annomate dealing of cards off the deck (CSS for img)
+      •Play with 4 decks - call create cards n times for n decks
       •Player has no $ must Stay! loose pot ?
       •algorithm to implement betting strategy
       •insurance - side bet
@@ -39,5 +39,8 @@ Project 1 -- Blackjack MVP
       •split play
       •Aces are 1 or 11 (11 for now
 
+Site:
+https://lin1ood.github.io/
 
-https://ga-students.slack.com/files/kristyn/F6AA69GCS/mvps_that_we_discussed_for_project_1.js
+Code:
+https://github.com/lin1ood/lin1ood.github.io
