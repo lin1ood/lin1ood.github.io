@@ -1,4 +1,4 @@
-#Project 1 -- Blackjack MVP
+# Project 1 -- Blackjack MVP
 
   Setup - up generateComputer -- Class - Objects - JavaScript
     • Setup background - Green Playing table
